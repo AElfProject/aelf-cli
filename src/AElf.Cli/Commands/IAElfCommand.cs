@@ -3,7 +3,7 @@ using AElf.Cli.Args;
 
 namespace AElf.Cli.Commands
 {
-    public interface IConsoleCommand
+    public interface IAElfCommand
     {
         Task ExecuteAsync(CommandLineArgs commandLineArgs);
 

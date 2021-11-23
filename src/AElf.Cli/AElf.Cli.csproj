@@ -67,10 +67,6 @@
       <ProjectReference Include="..\AElf.Blockchains.Single\AElf.Blockchains.Single.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="aelf\keys" />
-    </ItemGroup>
-
     <Target Name="CopyPackages" AfterTargets="AfterBuild">
         <ItemGroup>
             <PackageReferenceFiles Condition="%(PackageReference.CopyToOutputDirectory) != 'PreserveNewest' And %(PackageReference.CopyToOutputDirectory) != ''" Include="$(NugetPackageRoot)%(PackageReference.PackageName)\%(PackageReference.Version)\%(PackageReference.CopyToOutputDirectory)" />

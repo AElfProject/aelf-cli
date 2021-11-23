@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace AElf.Cli.Commands
 {
-    public class AccountsCommand : IConsoleCommand
+    public class AccountsCommand : IAElfCommand
     {
         public const string Name = "accounts";
 

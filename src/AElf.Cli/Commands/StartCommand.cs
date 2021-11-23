@@ -9,7 +9,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace AElf.Cli.Commands
 {
-    public class StartCommand : IConsoleCommand, ITransientDependency
+    public class StartCommand : IAElfCommand, ITransientDependency
     {
         public const string Name = "start";
 

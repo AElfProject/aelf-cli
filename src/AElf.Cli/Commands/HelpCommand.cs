@@ -10,7 +10,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace AElf.Cli.Commands
 {
-    public class HelpCommand : IConsoleCommand, ITransientDependency
+    public class HelpCommand : IAElfCommand, ITransientDependency
     {
         public const string Name = "help";
 
@@ -46,7 +46,7 @@ namespace AElf.Cli.Commands
 
             using (var scope = ServiceScopeFactory.CreateScope())
             {
-                var command = (IConsoleCommand) scope.ServiceProvider.GetRequiredService(commandType);
+                var command = (IAElfCommand) scope.ServiceProvider.GetRequiredService(commandType);
                 Logger.LogInformation(command.GetUsageInfo());
             }
 
@@ -71,7 +71,7 @@ namespace AElf.Cli.Commands
 
                 using (var scope = ServiceScopeFactory.CreateScope())
                 {
-                    shortDescription = ((IConsoleCommand) scope.ServiceProvider
+                    shortDescription = ((IAElfCommand) scope.ServiceProvider
                         .GetRequiredService(command.Value)).GetShortDescription();
                 }
 

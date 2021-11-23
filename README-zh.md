@@ -24,7 +24,7 @@ dotnet tool update --global --add-source ./nupkg aelf.cli
 
 ## 添加新的命令
 
-1. 在Commands目录下添加新的文件`*Command.cs`，让它继承自`IConsoleCommand`接口；
+1. 在Commands目录下添加新的文件`*Command.cs`，让它继承自`IAElfCommand`接口；
 
 2. 分别实现以下三个方法：
 - ExecuteAsync：执行该命令的逻辑

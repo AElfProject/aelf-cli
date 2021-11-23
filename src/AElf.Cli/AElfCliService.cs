@@ -37,7 +37,7 @@ namespace AElf.Cli
                 var commandType = CommandSelector.Select(commandLineArgs);
 
                 using var scope = ServiceScopeFactory.CreateScope();
-                var command = (IConsoleCommand) scope.ServiceProvider.GetRequiredService(commandType);
+                var command = (IAElfCommand) scope.ServiceProvider.GetRequiredService(commandType);
                 await command.ExecuteAsync(commandLineArgs);
             }
             catch (AElfCliUsageException usageException)
