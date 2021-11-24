@@ -23,7 +23,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\AElf.BIP39\AElf.BIP39.csproj" />
+      <ProjectReference Include="..\..\src\AElf.BIP39\AElf.BIP39.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="vectors.json" />
+      <Content Include="vectors.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

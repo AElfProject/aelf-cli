@@ -13,14 +13,10 @@ namespace AElf.BIP39.Test
     {
         private const string Password = "TREZOR";
 
-        private readonly IMnemonicService _mnemonicService;
-        private readonly IEntropyService _entropyService;
         private readonly IBip39Service _bip39Service;
 
         public Bip39Tests()
         {
-            _mnemonicService = GetRequiredService<IMnemonicService>();
-            _entropyService = GetRequiredService<IEntropyService>();
             _bip39Service = GetRequiredService<IBip39Service>();
         }
 
@@ -128,19 +124,27 @@ namespace AElf.BIP39.Test
                 Value = mnemonicValue,
                 Language = language
             };
-            var convertedEntropy = _mnemonicService.ConvertMnemonicToEntropy(mnemonic);
+            var convertedEntropy = _bip39Service.ConvertMnemonicToEntropy(mnemonic);
             convertedEntropy.Hex.ShouldBe(entropyHex);
             convertedEntropy.Language.ShouldBe(language);
 
-            _mnemonicService.ConvertMnemonicToSeedHex(mnemonic, Password).ShouldBe(seedHex);
+            _bip39Service.ConvertMnemonicToSeedHex(mnemonic, Password).ShouldBe(seedHex);
 
-            var convertedMnemonic = _entropyService.ConvertEntropyToMnemonic(new Entropy
+            var convertedMnemonic = _bip39Service.ConvertEntropyToMnemonic(new Entropy
             {
                 Hex = entropyHex,
                 Language = language
             });
             convertedMnemonic.Value.ShouldBe(mnemonicValue);
             convertedMnemonic.Language.ShouldBe(language);
+        }
+
+        [Fact]
+        public void GenerateMnemonicTest()
+        {
+            var mnemonic = _bip39Service.GenerateMnemonic(128, BipWordlistLanguage.English);
+            mnemonic.Value.ShouldNotBeNullOrEmpty();
+            mnemonic.Language.ShouldBe(BipWordlistLanguage.English);
         }
     }
 }

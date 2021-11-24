@@ -11,7 +11,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Volo.Abp.Autofac" Version="1.1.2" />
+        <PackageReference Include="Volo.Abp.Autofac" Version="3.1.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.*" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="3.1.0" />
         <PackageReference Include="Serilog.Sinks.Async" Version="1.4.0" />
@@ -64,6 +64,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AElf.BIP39\AElf.BIP39.csproj" />
       <ProjectReference Include="..\AElf.Blockchains.Single\AElf.Blockchains.Single.csproj" />
     </ItemGroup>
 

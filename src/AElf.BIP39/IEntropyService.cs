@@ -12,7 +12,7 @@ namespace AElf.BIP39
         Mnemonic ConvertEntropyToMnemonic(Entropy entropy);
     }
 
-    public class EntropyService : IEntropyService, ITransientDependency
+    internal class EntropyService : IEntropyService, ITransientDependency
     {
         private readonly IBipWordlistProvider _wordlistProvider;
 
@@ -43,11 +43,7 @@ namespace AElf.BIP39
 
             var joinedText = string.Join(entropy.Language == BipWordlistLanguage.Japanese ? "\u3000" : " ", words);
 
-            return new Mnemonic
-            {
-                Value = joinedText,
-                Language = entropy.Language
-            };
+            return new Mnemonic(joinedText, entropy.Language);
         }
     }
 }

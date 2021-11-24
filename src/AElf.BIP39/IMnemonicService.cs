@@ -16,7 +16,7 @@ namespace AElf.BIP39
         bool ValidateMnemonic(Mnemonic mnemonic);
     }
 
-    public class MnemonicService : IMnemonicService, ITransientDependency
+    internal class MnemonicService : IMnemonicService, ITransientDependency
     {
         private readonly IBipWordlistProvider _wordlistProvider;
 
@@ -63,14 +63,10 @@ namespace AElf.BIP39
             if (newChecksum != checksumBits)
                 throw new Exception(Bip39Constants.InvalidChecksum);
 
-            return new Entropy
-            {
-                Hex = BitConverter
-                    .ToString(entropyBytes)
-                    .Replace("-", "")
-                    .ToLower(),
-                Language = mnemonic.Language
-            };
+            return new Entropy(BitConverter
+                .ToString(entropyBytes)
+                .Replace("-", "")
+                .ToLower(), mnemonic.Language);
         }
 
         public string ConvertMnemonicToSeedHex(Mnemonic mnemonic, string password)
