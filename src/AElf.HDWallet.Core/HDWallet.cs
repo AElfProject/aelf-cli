@@ -2,7 +2,7 @@ using NBitcoin;
 
 namespace AElf.HDWallet.Core
 {
-    public abstract class HDWallet<TWallet> : IHDWallet<TWallet> where TWallet : IWallet, new()
+    public class HDWallet<TWallet> : IHDWallet<TWallet> where TWallet : IWallet, new()
     {
         public string Seed { get; set; }
 

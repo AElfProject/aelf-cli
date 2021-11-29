@@ -27,10 +27,11 @@ namespace AElf.HDWallet.Core
 
         private TWallet GetWallet(uint addressIndex, bool isInternal)
         {
+            var extKey = isInternal ? InternalChain.Derive(addressIndex) : ExternalChain.Derive(addressIndex);
+
             return new TWallet
             {
-                PrivateKey = (isInternal ? InternalChain.Derive(addressIndex) : ExternalChain.Derive(addressIndex))
-                    .PrivateKey.ToBytes(),
+                PrivateKey = extKey.PrivateKey.ToBytes(),
                 Index = addressIndex
             };
         }
