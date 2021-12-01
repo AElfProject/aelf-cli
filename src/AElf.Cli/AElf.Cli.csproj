@@ -66,6 +66,7 @@
     <ItemGroup>
         <Content Include="..\..\template\**" LinkBase="template">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
         </Content>
     </ItemGroup>
 

@@ -17,8 +17,9 @@ namespace AElf.Cli
             {
                 options.Commands[HelpCommand.Name] = typeof(HelpCommand);
                 options.Commands[StartCommand.Name] = typeof(StartCommand);
-                options.Commands[AccountsCommand.Name] = typeof(AccountsCommand);
-                options.Commands[CreateCommand.Name] = typeof(CreateCommand);
+                // options.Commands[AccountsCommand.Name] = typeof(AccountsCommand);
+                //options.Commands[CreateCommand.Name] = typeof(CreateCommand);
+                options.Commands[NewCommand.Name] = typeof(NewCommand);
             });
         }
     }

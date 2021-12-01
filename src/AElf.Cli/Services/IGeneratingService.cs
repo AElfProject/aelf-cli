@@ -18,6 +18,7 @@ namespace AElf.Cli.Services
     public class GeneratingService : IGeneratingService, ITransientDependency
     {
         private const string TemplatePath = "template";
+        private const string GeneratedFolderName = "generated";
         private const string ProjectPlaceholder = "HelloWorld";
         private const string ContractPlaceholder = "AElf.Contracts.HelloWorldContract";
         private const string ProtobufPlaceholder = "hello_world";
@@ -74,17 +75,25 @@ namespace AElf.Cli.Services
             return sb.ToString();
         }
 
+        private string GetGeneratedFolderPath(string path)
+        {
+            if (path.IsNullOrWhiteSpace())
+            {
+                path = Directory.GetCurrentDirectory();
+            }
+            return Path.Combine(path, GeneratedFolderName);
+
+        }
+
         public void Generate(string projectName, string path)
         {
             var replacements = GetReplacements(projectName);
+            path = GetGeneratedFolderPath(path);
 
             var generatedFiles = new Queue<string>();
-
             var originDir = new DirectoryInfo(TemplatePath);
             var destDir = CreateDir(path);
-
-            Logger.LogInformation($"Create directory {destDir}");
-
+            
             var queue = new Queue<DirectoryInfo>();
             queue.Enqueue(originDir);
             do
@@ -95,7 +104,6 @@ namespace AElf.Cli.Services
                     queue.Enqueue(directoryInfo);
 
                     var destSubDir = destDir.FullName + directoryInfo.FullName.Replace(originDir.FullName, "");
-                    Logger.LogInformation($"Create directory {destSubDir}");
                     CreateDir(ReplaceContent(destSubDir, replacements));
                 }
 
@@ -105,9 +113,6 @@ namespace AElf.Cli.Services
                     var destFileName = originFile.FullName.Replace(originDir.FullName, "");
                     destFileName = ReplaceContent(destFileName, replacements);
                     destFileName = destDir.FullName + destFileName;
-
-                    Logger.LogInformation($"Copy from {originFile.FullName} to {destFileName}");
-
                     originFile.CopyTo(destFileName, true);
 
                     generatedFiles.Enqueue(destFileName);
@@ -120,11 +125,13 @@ namespace AElf.Cli.Services
                 if (extension != null && _replaceExtensions.Contains(extension))
                 {
                     var content = File.ReadAllText(file);
-                    Logger.LogInformation($"Change {file}");
                     content = ReplaceContent(content, replacements);
                     File.WriteAllText(file, content);
                 }
             }
+            
+            Logger.LogInformation("Created successfully!");
+            Logger.LogInformation($"Directory: {path}");
         }
     }
 }
