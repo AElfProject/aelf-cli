@@ -31,11 +31,7 @@ namespace AElf.Cli.Commands
                 return Task.CompletedTask;
             }
 
-            var outputFolder = string.Empty;
-            if (commandLineArgs.Options.TryGetValue(Options.OutputFolder,out var output))
-            {
-                outputFolder = output;
-            }
+            commandLineArgs.Options.TryGetValue(Options.OutputFolder, out var outputFolder);
 
             _generatingService.Generate(commandLineArgs.Target, outputFolder);
             return Task.CompletedTask;
@@ -50,7 +46,7 @@ namespace AElf.Cli.Commands
             sb.AppendLine("    aelf new <project-name> [options]");
             sb.AppendLine();
             sb.AppendLine(
-                "    <project-name>: Common convention is to name a project is like YourCompany.YourProject. However, you can use different naming like YourProject (single level namespacing) or YourCompany.YourProduct.YourModule (three levels namespacing).");
+                "    project-name: Common convention is to name a project is like YourCompany.YourProject. However, you can use different naming like YourProject (single level namespacing) or YourCompany.YourProduct.YourModule (three levels namespacing).");
             sb.AppendLine();
             sb.AppendLine("Options:");
             sb.AppendLine();

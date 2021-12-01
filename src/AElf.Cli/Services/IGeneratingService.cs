@@ -17,7 +17,7 @@ namespace AElf.Cli.Services
 
     public class GeneratingService : IGeneratingService, ITransientDependency
     {
-        private const string TemplatePath = "template";
+        private const string TemplateFolderName = "template";
         private const string GeneratedFolderName = "generated";
         private const string ProjectPlaceholder = "HelloWorld";
         private const string ContractPlaceholder = "AElf.Contracts.HelloWorldContract";
@@ -85,13 +85,20 @@ namespace AElf.Cli.Services
 
         }
 
+        private string GetTemplatePath()
+        {
+            var type = typeof(GeneratingService);
+            var currentDirectory = Path.GetDirectoryName(type.Assembly.Location);
+            return Path.Combine(currentDirectory, TemplateFolderName);
+        }
+
         public void Generate(string projectName, string path)
         {
             var replacements = GetReplacements(projectName);
             path = GetGeneratedFolderPath(path);
 
             var generatedFiles = new Queue<string>();
-            var originDir = new DirectoryInfo(TemplatePath);
+            var originDir = new DirectoryInfo(GetTemplatePath());
             var destDir = CreateDir(path);
             
             var queue = new Queue<DirectoryInfo>();
@@ -131,7 +138,7 @@ namespace AElf.Cli.Services
             }
             
             Logger.LogInformation("Created successfully!");
-            Logger.LogInformation($"Directory: {path}");
+            Logger.LogInformation($"Directory: {Path.GetFullPath(path)}");
         }
     }
 }
