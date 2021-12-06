@@ -22,6 +22,7 @@ namespace AElf.Cli
                 options.Commands[NewCommand.Name] = typeof(NewCommand);
                 options.Commands[CallCommand.Name] = typeof(CallCommand);
                 options.Commands[SendCommand.Name] = typeof(SendCommand);
+                options.Commands[ConfigCommand.Name] = typeof(ConfigCommand);
             });
         }
     }
