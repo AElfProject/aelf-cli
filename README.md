@@ -35,4 +35,4 @@ dotnet tool update --global --add-source ./nupkg aelf.cli
 
 3. Then register this command to `AElfCliModule.cs`, the format you can ref to HelpCommand and StartCommand
 
-4. `dotnet pack` & `dotnet tool update ...` as stated before
+4. `dotnet pack` & `dotnet tool update --global --add-source ./nupkg aelf.cli` as stated before

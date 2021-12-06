@@ -33,4 +33,4 @@ dotnet tool update --global --add-source ./nupkg aelf.cli
 
 3. 在`AElfCliModule.cs`文件中注册该命令，格式参考HelpCommand、StartCommand等。
 
-4. 使用`dotnet pack`和`dotnet tool update ...`命令重新安装到本地即可测试新的命令。
+4. 使用`dotnet pack`和`dotnet tool update --global --add-source ./nupkg aelf.cli`命令重新安装到本地即可测试新的命令。
