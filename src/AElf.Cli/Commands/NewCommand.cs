@@ -27,7 +27,7 @@ namespace AElf.Cli.Commands
         {
             if (commandLineArgs.Target.IsNullOrWhiteSpace())
             {
-                Logger.LogError("Project name is required!");
+                Logger.LogInformation(GetUsageInfo());
                 return Task.CompletedTask;
             }
 

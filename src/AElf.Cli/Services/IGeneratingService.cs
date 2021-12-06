@@ -20,7 +20,7 @@ namespace AElf.Cli.Services
         private const string TemplateFolderName = "template";
         private const string GeneratedFolderName = "generated";
         private const string ProjectPlaceholder = "HelloWorld";
-        private const string ContractPlaceholder = "AElf.Contracts.HelloWorldContract";
+        private const string ContractPlaceholder = "AElf.Contracts.HelloWorld";
         private const string ProtobufPlaceholder = "hello_world";
 
         private readonly List<string> _replaceExtensions = new List<string>
@@ -48,7 +48,7 @@ namespace AElf.Cli.Services
         {
             var replacement = new List<Tuple<string, string>>
             {
-                new Tuple<string, string>(ContractPlaceholder, projectName + "Contract")
+                new Tuple<string, string>(ContractPlaceholder, projectName)
             };
 
             var lastName = projectName.Split(".").Last();
@@ -81,8 +81,8 @@ namespace AElf.Cli.Services
             {
                 path = Directory.GetCurrentDirectory();
             }
-            return Path.Combine(path, GeneratedFolderName);
 
+            return Path.Combine(path, GeneratedFolderName);
         }
 
         private string GetTemplatePath()
@@ -100,7 +100,7 @@ namespace AElf.Cli.Services
             var generatedFiles = new Queue<string>();
             var originDir = new DirectoryInfo(GetTemplatePath());
             var destDir = CreateDir(path);
-            
+
             var queue = new Queue<DirectoryInfo>();
             queue.Enqueue(originDir);
             do
@@ -136,7 +136,7 @@ namespace AElf.Cli.Services
                     File.WriteAllText(file, content);
                 }
             }
-            
+
             Logger.LogInformation("Created successfully!");
             Logger.LogInformation($"Directory: {Path.GetFullPath(path)}");
         }

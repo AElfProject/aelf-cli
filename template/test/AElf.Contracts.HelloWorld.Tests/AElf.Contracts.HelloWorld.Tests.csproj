@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>AElf.Contracts.HelloWorldContract</RootNamespace>
+    <RootNamespace>AElf.Contracts.HelloWorld</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\contract\AElf.Contracts.HelloWorldContract\AElf.Contracts.HelloWorldContract.csproj" />
+    <ProjectReference Include="..\..\contract\AElf.Contracts.HelloWorld\AElf.Contracts.HelloWorld.csproj" />
     <ProjectReference Include="..\..\src\AElf.Boilerplate.TestBase\AElf.Boilerplate.TestBase.csproj" />
   </ItemGroup>
 

@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.Modularity;
 
-namespace AElf.Contracts.HelloWorldContract
+namespace AElf.Contracts.HelloWorld
 {
     [DependsOn(typeof(MainChainDAppContractTestModule))]
     public class HelloWorldContractTestModule : MainChainDAppContractTestModule
