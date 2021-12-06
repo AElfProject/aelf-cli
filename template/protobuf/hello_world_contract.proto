@@ -21,7 +21,7 @@ import "google/protobuf/empty.proto";
 
 // the name of the C# namespace in which the contract code will be,
 // generated code will also be in this namespace.
-option csharp_namespace = "AElf.Contracts.HelloWorldContract";
+option csharp_namespace = "AElf.Contracts.HelloWorld";
 
 // the contract definition: a gRPC service definition.
 service HelloWorldContract {

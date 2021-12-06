@@ -1,7 +1,7 @@
 using AElf.Boilerplate.TestBase;
 using AElf.Cryptography.ECDSA;
 
-namespace AElf.Contracts.HelloWorldContract
+namespace AElf.Contracts.HelloWorld
 {
     public class HelloWorldContractTestBase : DAppContractTestBase<HelloWorldContractTestModule>
     {

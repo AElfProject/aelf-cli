@@ -1,6 +1,6 @@
 using Google.Protobuf.WellKnownTypes;
 
-namespace AElf.Contracts.HelloWorldContract
+namespace AElf.Contracts.HelloWorld
 {
     /// <summary>
     /// The C# implementation of the contract defined in hello_world_contract.proto that is located in the "protobuf"

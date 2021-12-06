@@ -7,7 +7,7 @@ using Google.Protobuf.WellKnownTypes;
 using Shouldly;
 using Xunit;
 
-namespace AElf.Contracts.HelloWorldContract
+namespace AElf.Contracts.HelloWorld
 {
     public class HelloWorldContractTests : HelloWorldContractTestBase
     {
