@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using AElf.Cli.Args;
 using AElf.Cli.Commands;
+using AElf.Cli.Services;
 using Volo.Abp.DependencyInjection;
 
 namespace AElf.Cli
@@ -35,8 +36,13 @@ namespace AElf.Cli
             try
             {
                 var commandType = CommandSelector.Select(commandLineArgs);
+                
+                var endpoint = commandLineArgs.Options.GetOrNull(GlobalOptions.Endpoint.Short, GlobalOptions.Endpoint.Long);
+                var account = commandLineArgs.Options.GetOrNull(GlobalOptions.Account.Short, GlobalOptions.Account.Long);
+                var password = commandLineArgs.Options.GetOrNull(GlobalOptions.Password.Short, GlobalOptions.Password.Long);
 
                 using var scope = ServiceScopeFactory.CreateScope();
+                scope.ServiceProvider.GetRequiredService<IUserContext>().Init(endpoint, account, password);
                 var command = (IAElfCommand) scope.ServiceProvider.GetRequiredService(commandType);
                 await command.ExecuteAsync(commandLineArgs);
             }

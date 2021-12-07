@@ -17,8 +17,7 @@ namespace AElf.Cli.Services
     public class ConfigService : IConfigService, ITransientDependency
     {
         private const string EnvironmentVariablePrefix = "AELF_CLI_";
-        private readonly List<string> _supportKeys = new List<string> {"endpoint", "account", "password"};
-        
+
         public bool Set(string key, string value)
         {
             return AddConfigToFile(key, value);
@@ -43,13 +42,15 @@ namespace AElf.Cli.Services
 
         private string GetConfigPath()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "aelf","aelfcli.conf");
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "aelf",
+                "aelfcli.conf");
         }
 
         private Dictionary<string, string> GetConfig()
         {
             var configs = GetConfigFromFile();
-            foreach (var key in _supportKeys)
+            foreach (var key in new List<string>
+                {AElfCliConsts.EndpointConfigKey, AElfCliConsts.AddressConfigKey, AElfCliConsts.PasswordConfigKey})
             {
                 if (configs.ContainsKey(key))
                 {
@@ -96,20 +97,14 @@ namespace AElf.Cli.Services
 
         private bool AddConfigToFile(string key, string value)
         {
-            var config = GetConfigFromFile();
-            if (config.ContainsKey(key))
-            {
-                return false;
-            }
-            
             var path = GetConfigPath();
-            using var sr = new StreamWriter(path);
-            sr.WriteLine($"{key} {value}");
-            sr.Close();
+            var newContent = GetConfigContent(path, key);
+            newContent.Add($"{key} {value}");
+            File.WriteAllLines(path, newContent);
 
             return true;
         }
-        
+
         private bool DeleteConfigFromFile(string key)
         {
             var config = GetConfigFromFile();
@@ -117,8 +112,16 @@ namespace AElf.Cli.Services
             {
                 return false;
             }
-            
+
             var path = GetConfigPath();
+            var newContent = GetConfigContent(path, key);
+            File.WriteAllLines(path, newContent);
+
+            return true;
+        }
+
+        private List<string> GetConfigContent(string path, string ignoreKey)
+        {
             using var sr = new StreamReader(path);
             string line;
             var newContent = new List<string>();
@@ -132,15 +135,13 @@ namespace AElf.Cli.Services
                 }
 
                 var item = lineTrim.Split(" ");
-                if (item[0] != key)
+                if (item[0] != ignoreKey)
                 {
                     newContent.Add(line);
                 }
             }
-            
-            File.WriteAllLines(path,newContent);
 
-            return true;
+            return newContent;
         }
     }
 }

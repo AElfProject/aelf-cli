@@ -12,28 +12,28 @@ namespace AElf.Cli.Services
 {
     public interface IBlockChainService
     {
-        Task<string> SendTransactionAsync(string contractAddress, string contractName, string method, string @params);
+        Task<string> SendTransactionAsync(string contract, string method, string @params);
 
-        Task<string> ExecuteTransactionAsync(string contractAddress, string contractName, string method,
-            string @params);
+        Task<string> ExecuteTransactionAsync(string contract, string method,string @params);
     }
 
     public class BlockChainService : IBlockChainService, ITransientDependency
     {
         private readonly AElfClient _client;
+        private readonly IUserContext _userContext;
 
-        public BlockChainService()
+        public BlockChainService(IUserContext userContext)
         {
-            // TODO: Get url from user config
-            _client = new AElfClient("http://127.0.0.1:8000");
+            _userContext = userContext;
+            _client = new AElfClient(_userContext.GetEndpoint());
         }
 
-        public async Task<string> SendTransactionAsync(string contractAddress, string contractName, string method, string @params)
+        public async Task<string> SendTransactionAsync(string contract, string method, string @params)
         {
             // TODO: Get user key.
             var privateKey = "cd86ab6347d8e52bbbe8532141fc59ce596268143a308d1d40fedf385528b458";
             
-            contractAddress = await GetContractAddressAsync(contractAddress, contractName);
+            var contractAddress = await GetContractAddressAsync(contract);
             var rawTransaction = await GenerateRawTransactionAsync(privateKey, contractAddress, method, FormatParams(@params));
             var signature = GetSignature(privateKey,rawTransaction);
 
@@ -46,12 +46,12 @@ namespace AElf.Cli.Services
             return rawTransactionResult.TransactionId;
         }
 
-        public async Task<string> ExecuteTransactionAsync(string contractAddress, string contractName, string method, string @params)
+        public async Task<string> ExecuteTransactionAsync(string contract, string method, string @params)
         {
             // TODO: Get user key.
             var privateKey = "cd86ab6347d8e52bbbe8532141fc59ce596268143a308d1d40fedf385528b458";
             
-            contractAddress = await GetContractAddressAsync(contractAddress, contractName);
+            var contractAddress = await GetContractAddressAsync(contract);
             var rawTransaction = await GenerateRawTransactionAsync(privateKey, contractAddress, method, FormatParams(@params));
             var signature = GetSignature(privateKey,rawTransaction);
 
@@ -71,11 +71,12 @@ namespace AElf.Cli.Services
             return ByteString.CopyFrom(signature).ToHex();
         }
 
-        private async Task<string> GetContractAddressAsync(string contractAddress, string contractName)
+        private async Task<string> GetContractAddressAsync(string contract)
         {
-            if (string.IsNullOrWhiteSpace(contractAddress))
+            var contractAddress = contract;
+            if (contract.StartsWith("AElf.ContractNames."))
             {
-                contractAddress = (await _client.GetContractAddressByNameAsync(HashHelper.ComputeFrom(contractName))).ToBase58();
+                contractAddress = (await _client.GetContractAddressByNameAsync(HashHelper.ComputeFrom(contract))).ToBase58();
             }
 
             return contractAddress;

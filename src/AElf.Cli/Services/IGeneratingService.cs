@@ -136,9 +136,6 @@ namespace AElf.Cli.Services
                     File.WriteAllText(file, content);
                 }
             }
-
-            Logger.LogInformation("Created successfully!");
-            Logger.LogInformation($"Directory: {Path.GetFullPath(path)}");
         }
     }
 }

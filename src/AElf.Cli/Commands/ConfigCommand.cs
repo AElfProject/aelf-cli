@@ -26,16 +26,18 @@ namespace AElf.Cli.Commands
 
         public Task ExecuteAsync(CommandLineArgs commandLineArgs)
         {
+            var key = commandLineArgs.Options.GetOrNull(Options.Key.Short, Options.Key.Long);
+            var value = commandLineArgs.Options.GetOrNull(Options.Value.Short, Options.Value.Long);
+
             if (commandLineArgs.Target.IsNullOrWhiteSpace())
             {
-                Logger.LogInformation(GetUsageInfo());
-                return Task.CompletedTask;
+                throw new AElfCliUsageException(
+                    "Config command is missing!" +
+                    Environment.NewLine + Environment.NewLine +
+                    GetUsageInfo()
+                );
             }
-
-            commandLineArgs.Options.TryGetValue(Options.Key, out var key);
-            commandLineArgs.Options.TryGetValue(Options.Value, out var value);
-            
-            switch (commandLineArgs.Target)
+            switch (commandLineArgs.Target.Trim().ToLower())
             {
                 case "list":
                     var configs = _configService.GetList();
@@ -49,17 +51,24 @@ namespace AElf.Cli.Commands
                     Logger.LogInformation($"{key}: {value}");
                     break;
                 case "set":
-                    _configService.Set(key, value);
+                    var getResult = _configService.Set(key, value);
+                    Logger.LogInformation(getResult
+                        ? $"The config: {key} is set successful."
+                        : $"Failed to set config: {key}.");
                     break;
                 case "del":
-                    _configService.Delete(key);
+                    var delResult = _configService.Delete(key);
+                    Logger.LogInformation(delResult
+                        ? $"The config: {key} is deleted successful."
+                        : $"Failed to delete config: {key}.");
                     break;
                 default:
-                    Logger.LogInformation(GetUsageInfo());
-                    break;
+                    throw new AElfCliUsageException(
+                        $"Config command: {commandLineArgs.Target} is not supported!" +
+                        Environment.NewLine + Environment.NewLine +
+                        GetUsageInfo());
             }
 
-            Logger.LogInformation("Success!");
             return Task.CompletedTask; 
         }
 
@@ -75,8 +84,8 @@ namespace AElf.Cli.Commands
             sb.AppendLine();
             sb.AppendLine("Options:");
             sb.AppendLine();
-            sb.AppendLine("    -k: The key of config item. (Supported keys: endpoint, account and password.)");
-            sb.AppendLine("    -v: The value of config item.");
+            sb.AppendLine("    -k|--key:    The key of config item. (Supported keys: endpoint, account and password.)");
+            sb.AppendLine("    -v|--value:  The value of config item.");
             sb.AppendLine();
             sb.AppendLine("Examples:");
             sb.AppendLine();
@@ -97,8 +106,17 @@ namespace AElf.Cli.Commands
         
         public static class Options
         {
-            public const string Key = "k";
-            public const string Value = "v";
+            public static class Key
+            {
+                public const string Short = "k";
+                public const string Long = "key";
+            }
+            
+            public static class Value
+            {
+                public const string Short = "v";
+                public const string Long = "value";
+            }
         }
     }
 }

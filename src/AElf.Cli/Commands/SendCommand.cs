@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using System.Threading.Tasks;
 using AElf.Cli.Args;
@@ -24,25 +25,29 @@ namespace AElf.Cli.Commands
         
         public async Task ExecuteAsync(CommandLineArgs commandLineArgs)
         {
-            commandLineArgs.Options.TryGetValue(Options.ContractAddress, out var contractAddress);
-            commandLineArgs.Options.TryGetValue(Options.ContractName, out var contractName);
-            if (string.IsNullOrWhiteSpace(contractAddress) && string.IsNullOrWhiteSpace(contractName))
+            var method = commandLineArgs.Options.GetOrNull(Options.Method.Short, Options.Method.Long);
+            if (string.IsNullOrWhiteSpace(commandLineArgs.Target))
             {
-                Logger.LogError("Either contract address or contract name must be entered!");
-                return;
+                throw new AElfCliUsageException(
+                    "Contract name or address is missing!" +
+                    Environment.NewLine + Environment.NewLine +
+                    GetUsageInfo()
+                );
             }
             
-            commandLineArgs.Options.TryGetValue(Options.Method, out var method);
-            if (string.IsNullOrWhiteSpace(method) )
+            if (string.IsNullOrWhiteSpace(method))
             {
-                Logger.LogError("Method name is required!");
-                return;
+                throw new AElfCliUsageException(
+                    "Contract method is missing!" +
+                    Environment.NewLine + Environment.NewLine +
+                    GetUsageInfo()
+                );
             }
             
-            commandLineArgs.Options.TryGetValue(Options.Params, out var @params);
+            var @params = commandLineArgs.Options.GetOrNull(Options.Params.Short, Options.Params.Long);
 
             var result =
-                await _blockChainService.SendTransactionAsync(contractAddress, contractName, method, @params);
+                await _blockChainService.SendTransactionAsync(commandLineArgs.Target, method, @params);
             
             Logger.LogInformation($"Traction Id: {result}" );
         }
@@ -53,14 +58,12 @@ namespace AElf.Cli.Commands
             sb.AppendLine();
             sb.AppendLine("Usage:");
             sb.AppendLine();
-            sb.AppendLine("    aelf send [options] ");
+            sb.AppendLine("    aelf send <contract-name|contract-address> [options] ");
             sb.AppendLine();
             sb.AppendLine("Options:");
             sb.AppendLine();
-            sb.AppendLine("    -a: The address of the contract to call.");
-            sb.AppendLine("    -n: The name of the contract to call.");
-            sb.AppendLine("    -m: The method name of the contract to call.");
-            sb.AppendLine("    -p: The method params of the contract to call.");
+            sb.AppendLine("    -cm|--method: The contract method to send.");
+            sb.AppendLine("    -cp|--params: The contract params to send.");
             sb.AppendLine();
             sb.AppendLine("See the documentation for more info: https://docs.aelf.io");
 
@@ -74,10 +77,17 @@ namespace AElf.Cli.Commands
         
         public static class Options
         {
-            public const string ContractAddress = "a";
-            public const string ContractName = "n";
-            public const string Method = "m";
-            public const string Params = "p";
+            public static class Method
+            {
+                public const string Short = "cm";
+                public const string Long = "method";
+            }
+            
+            public static class Params
+            {
+                public const string Short = "cp";
+                public const string Long = "params";
+            }
         }
     }
 }
