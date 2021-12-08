@@ -42,8 +42,7 @@ namespace AElf.Cli.Services
 
         private string GetConfigPath()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "aelf",
-                "aelfcli.conf");
+            return Path.Combine(AElfCliConsts.DataPath, "aelfcli.conf");
         }
 
         private Dictionary<string, string> GetConfig()

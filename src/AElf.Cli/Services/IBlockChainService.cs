@@ -21,21 +21,20 @@ namespace AElf.Cli.Services
     {
         private readonly AElfClient _client;
         private readonly IUserContext _userContext;
+        private readonly IAccountsService _accountsService;
 
-        public BlockChainService(IUserContext userContext)
+        public BlockChainService(IUserContext userContext, IAccountsService accountsService)
         {
             _userContext = userContext;
+            _accountsService = accountsService;
             _client = new AElfClient(_userContext.GetEndpoint());
         }
 
         public async Task<string> SendTransactionAsync(string contract, string method, string @params)
         {
-            // TODO: Get user key.
-            var privateKey = "cd86ab6347d8e52bbbe8532141fc59ce596268143a308d1d40fedf385528b458";
-            
             var contractAddress = await GetContractAddressAsync(contract);
-            var rawTransaction = await GenerateRawTransactionAsync(privateKey, contractAddress, method, FormatParams(@params));
-            var signature = GetSignature(privateKey,rawTransaction);
+            var rawTransaction = await GenerateRawTransactionAsync(_userContext.GetAddress(), contractAddress, method, FormatParams(@params));
+            var signature = await GetSignatureAsync(rawTransaction);
 
             var rawTransactionResult = await _client.SendRawTransactionAsync(new SendRawTransactionInput()
             {
@@ -48,12 +47,9 @@ namespace AElf.Cli.Services
 
         public async Task<string> ExecuteTransactionAsync(string contract, string method, string @params)
         {
-            // TODO: Get user key.
-            var privateKey = "cd86ab6347d8e52bbbe8532141fc59ce596268143a308d1d40fedf385528b458";
-            
             var contractAddress = await GetContractAddressAsync(contract);
-            var rawTransaction = await GenerateRawTransactionAsync(privateKey, contractAddress, method, FormatParams(@params));
-            var signature = GetSignature(privateKey,rawTransaction);
+            var rawTransaction = await GenerateRawTransactionAsync(_userContext.GetAddress(), contractAddress, method, FormatParams(@params));
+            var signature = await GetSignatureAsync(rawTransaction);
 
             var rawTransactionResult = await _client.ExecuteRawTransactionAsync(new ExecuteRawTransactionDto()
             {
@@ -64,10 +60,11 @@ namespace AElf.Cli.Services
             return rawTransactionResult;
         }
         
-        private string GetSignature(string privateKey, string rawTransaction)
+        private async Task<string> GetSignatureAsync(string rawTransaction)
         {
             var transactionId = HashHelper.ComputeFrom(ByteArrayHelper.HexStringToByteArray(rawTransaction));
-            var signature = CryptoHelper.SignWithPrivateKey(ByteArrayHelper.HexStringToByteArray(privateKey), transactionId.ToByteArray());
+            var signature = await _accountsService.SignAsync(_userContext.GetAddress(), _userContext.GetPassword(),
+                transactionId.ToByteArray());
             return ByteString.CopyFrom(signature).ToHex();
         }
 
@@ -82,17 +79,16 @@ namespace AElf.Cli.Services
             return contractAddress;
         }
 
-        private async Task<string> GenerateRawTransactionAsync(string privateKey, string contractAddress,string method, string @params)
+        private async Task<string> GenerateRawTransactionAsync(string from, string to,string method, string @params)
         {
-            var address = _client.GetAddressFromPrivateKey(privateKey);
             var status = await _client.GetChainStatusAsync();
             var height = status.BestChainHeight;
             var blockHash = status.BestChainHash;
             
             var rawTransaction = await _client.CreateRawTransactionAsync(new CreateRawTransactionInput
             {
-                From = address,
-                To = contractAddress,
+                From = from,
+                To = to,
                 MethodName = method,
                 Params = @params,
                 RefBlockNumber = height,
