@@ -5,7 +5,7 @@ namespace AElf.Cli.Services
     public interface IUserContext
     {
         string GetEndpoint();
-        string GetAddress();
+        string GetAccount();
         string GetPassword();
 
         void Init(string endpoint, string address, string password);
@@ -16,7 +16,7 @@ namespace AElf.Cli.Services
         private readonly IConfigService _configService;
 
         private string _endpoint;
-        private string _address;
+        private string _account;
         private string _password;
 
         public UserUserContext(IConfigService configService)
@@ -34,19 +34,19 @@ namespace AElf.Cli.Services
             return _endpoint;
         }
 
-        public string GetAddress()
+        public string GetAccount()
         {
-            if (string.IsNullOrWhiteSpace(_endpoint))
+            if (string.IsNullOrWhiteSpace(_account))
             {
-                _address = _configService.Get(AElfCliConsts.AddressConfigKey);
+                _account = _configService.Get(AElfCliConsts.AccountConfigKey);
             }
 
-            return _address;
+            return _account;
         }
 
         public string GetPassword()
         {
-            if (string.IsNullOrWhiteSpace(_endpoint))
+            if (string.IsNullOrWhiteSpace(_password))
             {
                 _password = _configService.Get(AElfCliConsts.PasswordConfigKey);
             }
@@ -54,10 +54,10 @@ namespace AElf.Cli.Services
             return _password;
         }
 
-        public void Init(string endpoint, string address, string password)
+        public void Init(string endpoint, string account, string password)
         {
             _endpoint = endpoint;
-            _address = endpoint;
+            _account = account;
             _password = password;
         }
     }

@@ -48,8 +48,8 @@ namespace AElf.Cli.Commands
 
             var result =
                 await _blockChainService.SendTransactionAsync(commandLineArgs.Target, method, @params);
-            
-            Logger.LogInformation($"Traction Id: {result}" );
+
+            await _blockChainService.CheckTransactionResultAsync(result);
         }
 
         public string GetUsageInfo()

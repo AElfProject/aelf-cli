@@ -49,7 +49,7 @@ namespace AElf.Cli.Services
         {
             var configs = GetConfigFromFile();
             foreach (var key in new List<string>
-                {AElfCliConsts.EndpointConfigKey, AElfCliConsts.AddressConfigKey, AElfCliConsts.PasswordConfigKey})
+                {AElfCliConsts.EndpointConfigKey, AElfCliConsts.AccountConfigKey, AElfCliConsts.PasswordConfigKey})
             {
                 if (configs.ContainsKey(key))
                 {
