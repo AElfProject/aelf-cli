@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -45,6 +46,12 @@ namespace AElf.Cli
         private static IHostBuilder CreateHostBuilder() =>
             Host.CreateDefaultBuilder()
                 .ConfigureLogging(builder => { builder.ClearProviders(); })
+                .ConfigureAppConfiguration(build =>
+                {
+                    var type = typeof(Blockchain);
+                    var currentDirectory = Path.GetDirectoryName(type.Assembly.Location);
+                    build.SetBasePath(currentDirectory);
+                })
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
                 .UseAutofac();
     }
