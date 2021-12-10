@@ -297,3 +297,4 @@ Contracts.manifest
 
 # Contract patcher dlls
 scripts/patcher/*
+test/patched/*

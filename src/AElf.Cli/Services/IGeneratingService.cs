@@ -24,7 +24,7 @@ namespace AElf.Cli.Services
         private const string ProtobufPlaceholder = "hello_world";
 
         private readonly List<string> _replaceExtensions = new List<string>
-            {".cs", ".proto", ".csproj", ".json", ".config", ".sln",".cake"};
+            {".cs", ".proto", ".csproj", ".json", ".config", ".sln",".cake",".targets"};
         
         private readonly List<string> _hiddenFiles = new List<string>
             {"gitignore"};
