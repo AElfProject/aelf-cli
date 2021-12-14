@@ -4,11 +4,9 @@ namespace AElf.Cli.Services
 {
     public interface IUserContext
     {
-        string GetEndpoint();
-        string GetAccount();
-        string GetPassword();
-
-        void Init(string endpoint, string address, string password);
+        string Endpoint { get; set; }
+        string Account { get; set; }
+        string Password { get; set; }
     }
 
     public class UserUserContext : IUserContext, ISingletonDependency
@@ -24,41 +22,47 @@ namespace AElf.Cli.Services
             _configService = configService;
         }
 
-        public string GetEndpoint()
-        {
-            if (string.IsNullOrWhiteSpace(_endpoint))
-            {
-                _endpoint = _configService.Get(AElfCliConsts.EndpointConfigKey);
-            }
 
-            return _endpoint;
+        public string Endpoint
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_endpoint))
+                {
+                    _endpoint = _configService.Get(AElfCliConsts.EndpointConfigKey);
+                }
+
+                return _endpoint;
+            }
+            set => _endpoint = value;
         }
 
-        public string GetAccount()
+        public string Account
         {
-            if (string.IsNullOrWhiteSpace(_account))
+            get
             {
-                _account = _configService.Get(AElfCliConsts.AccountConfigKey);
-            }
+                if (string.IsNullOrWhiteSpace(_account))
+                {
+                    _account = _configService.Get(AElfCliConsts.AccountConfigKey);
+                }
 
-            return _account;
+                return _account;
+            }
+            set => _account = value;
         }
 
-        public string GetPassword()
+        public string Password
         {
-            if (string.IsNullOrWhiteSpace(_password))
+            get
             {
-                _password = _configService.Get(AElfCliConsts.PasswordConfigKey);
+                if (string.IsNullOrWhiteSpace(_password))
+                {
+                    _password = _configService.Get(AElfCliConsts.PasswordConfigKey);
+                }
+
+                return _password;
             }
-
-            return _password;
-        }
-
-        public void Init(string endpoint, string account, string password)
-        {
-            _endpoint = endpoint;
-            _account = account;
-            _password = password;
+            set => _password = value;
         }
     }
 }

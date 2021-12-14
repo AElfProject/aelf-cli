@@ -42,7 +42,12 @@ namespace AElf.Cli
                 var password = commandLineArgs.Options.GetOrNull(GlobalOptions.Password.Short, GlobalOptions.Password.Long);
 
                 using var scope = ServiceScopeFactory.CreateScope();
-                scope.ServiceProvider.GetRequiredService<IUserContext>().Init(endpoint, account, password);
+                
+                var context = scope.ServiceProvider.GetRequiredService<IUserContext>();
+                context.Endpoint = endpoint;
+                context.Account = account;
+                context.Password = password;
+                
                 var command = (IAElfCommand) scope.ServiceProvider.GetRequiredService(commandType);
                 await command.ExecuteAsync(commandLineArgs);
             }

@@ -15,14 +15,16 @@ namespace AElf.Cli.Commands
         
         private readonly IFaucetService _faucetService;
         private readonly IBlockChainService _blockChainService;
+        private readonly IUserContext _userContext;
         
         public ILogger<FaucetCommand> Logger { get; set; }
 
-        public FaucetCommand(IFaucetService faucetService, IBlockChainService blockChainService)
+        public FaucetCommand(IFaucetService faucetService, IBlockChainService blockChainService, IUserContext userContext)
         {
             _faucetService = faucetService;
             _blockChainService = blockChainService;
-            
+            _userContext = userContext;
+
             Logger = NullLogger<FaucetCommand>.Instance;
         }
 
@@ -31,18 +33,28 @@ namespace AElf.Cli.Commands
             var symbol = commandLineArgs.Options.GetOrNull(Options.Symbol.Short, Options.Symbol.Long);
             var count = commandLineArgs.Options.GetOrNull(Options.Count.Short, Options.Count.Long);
 
-            switch (commandLineArgs.Target.ToLower())
+            var endpoint = _userContext.Endpoint;
+            try
             {
-                case "take":
-                    var txId = await _faucetService.TaskAsync(symbol.IsNullOrWhiteSpace() ? AElfCliConsts.AElfNativeSymbol : symbol,
-                        count.IsNullOrWhiteSpace() ? 100_00000000 : long.Parse(count));
-                    await _blockChainService.CheckTransactionResultAsync(txId);
-                    break;
-                default:
-                    throw new AElfCliUsageException(
-                        $"Faucet command: {commandLineArgs.Target} is not supported!" +
-                        Environment.NewLine + Environment.NewLine +
-                        GetUsageInfo());
+                _userContext.Endpoint = AElfCliConsts.TestNetEndpoint;
+                switch (commandLineArgs.Target.ToLower())
+                {
+                    case "take":
+                        var txId = await _faucetService.TaskAsync(
+                            symbol.IsNullOrWhiteSpace() ? AElfCliConsts.AElfNativeSymbol : symbol,
+                            count.IsNullOrWhiteSpace() ? 100_00000000 : long.Parse(count));
+                        await _blockChainService.CheckTransactionResultAsync(txId);
+                        break;
+                    default:
+                        throw new AElfCliUsageException(
+                            $"Faucet command: {commandLineArgs.Target} is not supported!" +
+                            Environment.NewLine + Environment.NewLine +
+                            GetUsageInfo());
+                }
+            }
+            finally
+            {
+                _userContext.Endpoint = endpoint;
             }
         }
 
