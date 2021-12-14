@@ -14,8 +14,6 @@ namespace AElf.Cli.Services
     {
         private readonly IBlockChainService _blockChainService;
 
-        private const string FaucetContractAddress = "2M24EKAecggCnttZ9DUUMCXi4xC67rozA87kFgid9qEwRUMHTs";
-
         public FaucetService(IBlockChainService blockChainService)
         {
             _blockChainService = blockChainService;
@@ -27,7 +25,7 @@ namespace AElf.Cli.Services
             @params["symbol"] = symbol;
             @params["amount"] = amount;
 
-            return await _blockChainService.SendTransactionAsync(FaucetContractAddress, "Take", JsonConvert.SerializeObject(@params));
+            return await _blockChainService.SendTransactionAsync(AElfCliConsts.FaucetContractAddress, "Take", JsonConvert.SerializeObject(@params));
         }
     }
 }
