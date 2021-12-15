@@ -25,6 +25,7 @@ namespace AElf.Cli
                 options.Commands[ConfigCommand.Name] = typeof(ConfigCommand);
                 options.Commands[FaucetCommand.Name] = typeof(FaucetCommand);
                 options.Commands[TopOfOasisCommand.Name] = typeof(TopOfOasisCommand);
+                options.Commands[DeployCommand.Name] = typeof(DeployCommand);
             });
         }
     }

@@ -1,14 +1,11 @@
-using System;
 using System.Threading.Tasks;
 using AElf.Client.Dto;
-using AElf.Client.Service;
-using AElf.Cryptography;
 using AElf.Types;
 using Google.Protobuf;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Crypto.Parameters;
+using Newtonsoft.Json.Linq;
 using Volo.Abp.DependencyInjection;
 
 namespace AElf.Cli.Services
@@ -19,7 +16,9 @@ namespace AElf.Cli.Services
 
         Task<string> ExecuteTransactionAsync(string contract, string method,string @params = null);
 
-        Task<string> CheckTransactionResultAsync(string txId);
+        Task<TransactionResultDto> CheckTransactionResultAsync(string txId);
+
+        Task<string> DeploySmartContractAsync(byte[] codes, int category = 0, string contractAddress = null);
     }
 
     public class BlockChainService : IBlockChainService, ITransientDependency
@@ -71,31 +70,57 @@ namespace AElf.Cli.Services
             return rawTransactionResult;
         }
 
-        public async Task<string> CheckTransactionResultAsync(string txId)
+        public async Task<TransactionResultDto> CheckTransactionResultAsync(string txId)
         {
             Logger.LogInformation("Checking transaction result...");
+            var client = _aelfClientFactory.CreateClient();
             
-            var result = await _aelfClientFactory.CreateClient().GetTransactionResultAsync(txId);
+            var result = await client.GetTransactionResultAsync(txId);
             var i = 0;
-            while (i < 4)
+            while (i < 10)
             {
                 if (result.Status == TransactionResultStatus.Mined.ToString().ToUpper())
                 {
                     Logger.LogInformation($"Transaction: {txId} executed successfully.");
-                    return result.ReturnValue;
+                    break;
                 }
                 
                 if (result.Status == TransactionResultStatus.Failed.ToString().ToUpper() || result.Status == TransactionResultStatus.NodeValidationFailed.ToString().ToUpper())
                 {
-                    Logger.LogInformation($"Transaction: {txId} failed. Error: {result.Error}");
-                    return null;
+                    Logger.LogWarning($"Transaction: {txId} failed. Error: {result.Error}");
+                    break;
                 }
 
                 await Task.Delay(1000);
+                result = await client.GetTransactionResultAsync(txId);
                 i++;
             }
+            
+            return result;
+        }
 
-            return null;
+        public async Task<string> DeploySmartContractAsync(byte[] codes, int category = 0,
+            string contractAddress = null)
+        {
+            var client = _aelfClientFactory.CreateClient();
+            var chain = await client.GetChainStatusAsync();
+            
+            if (string.IsNullOrWhiteSpace(contractAddress))
+            {
+                var @params = new JObject();
+                @params["category"] = category;
+                @params["code"] = ByteString.CopyFrom(codes).ToBase64();
+                return await SendTransactionAsync(chain.GenesisContractAddress, "DeploySmartContract",
+                    JsonConvert.SerializeObject(@params));
+            }
+            else
+            {
+                var @params = new JObject();
+                @params["code"] = ByteString.CopyFrom(codes).ToBase64();
+                @params["address"] = new JObject {["value"] = Address.FromBase58(contractAddress).Value.ToBase64()};
+                return await SendTransactionAsync(chain.GenesisContractAddress, "UpdateSmartContract",
+                    JsonConvert.SerializeObject(@params));
+            }
         }
 
         private async Task<string> GetSignatureAsync(string rawTransaction)
@@ -119,11 +144,12 @@ namespace AElf.Cli.Services
 
         private async Task<string> GenerateRawTransactionAsync(string from, string to,string method, string @params)
         {
-            var status = await _aelfClientFactory.CreateClient().GetChainStatusAsync();
+            var client = _aelfClientFactory.CreateClient();
+            var status = await client.GetChainStatusAsync();
             var height = status.BestChainHeight;
             var blockHash = status.BestChainHash;
             
-            var rawTransaction = await _aelfClientFactory.CreateClient().CreateRawTransactionAsync(new CreateRawTransactionInput
+            var rawTransaction = await client.CreateRawTransactionAsync(new CreateRawTransactionInput
             {
                 From = from,
                 To = to,

@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AElf.Cli.Args;
 using AElf.Cli.Services;
+using AElf.Types;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -40,9 +41,9 @@ namespace AElf.Cli.Commands
                     case "upload-project":
                         var txId = await _topOfOasisService.UploadProjectAsync();
                         var result = await _blockChainService.CheckTransactionResultAsync(txId);
-                        if (!string.IsNullOrWhiteSpace(result))
+                        if (result.Status == TransactionResultStatus.Mined.ToString().ToUpper())
                         {
-                            var projectId = StringValue.Parser.ParseFrom(ByteArrayHelper.HexStringToByteArray(result));
+                            var projectId = StringValue.Parser.ParseFrom(ByteArrayHelper.HexStringToByteArray(result.ReturnValue));
                             Logger.LogInformation($"Your project id is: {projectId.Value}.");
                         }
                         break;
