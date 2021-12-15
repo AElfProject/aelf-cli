@@ -25,9 +25,6 @@ namespace AElf.Cli.Commands
 
         public async Task ExecuteAsync(CommandLineArgs commandLineArgs)
         {
-            // call AElf.ContractNames.Token -cm GetBalance -cp '{"owner":{ "value": "OT0klzwoNF0M2J2/H3QWLqDrmLytDoNCkPMa+I/hoMw=" },"symbol":"ELF"}'
-            // call AElf.ContractNames.Token -m GetBalance -p '{"owner":{ "value": "0hHPcj8XOW988oLcA6JjaOgqAm1WmJMD81Zl7LQ8cIY=" },"symbol":"ELF"}'
-            
             var method = commandLineArgs.Options.GetOrNull(Options.Method.Short, Options.Method.Long);
             if (string.IsNullOrWhiteSpace(commandLineArgs.Target))
             {

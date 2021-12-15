@@ -7,7 +7,7 @@ namespace AElf.Cli.Services
 {
     public interface IFaucetService
     {
-        Task<string> TaskAsync(string symbol, long amount);
+        Task<string> TakeAsync(string symbol, long amount);
     }
 
     public class FaucetService : IFaucetService, ITransientDependency
@@ -19,7 +19,7 @@ namespace AElf.Cli.Services
             _blockChainService = blockChainService;
         }
 
-        public async Task<string> TaskAsync(string symbol, long amount)
+        public async Task<string> TakeAsync(string symbol, long amount)
         {
             var @params = new JObject();
             @params["symbol"] = symbol;

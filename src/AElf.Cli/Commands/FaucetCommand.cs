@@ -40,7 +40,7 @@ namespace AElf.Cli.Commands
                 switch (commandLineArgs.Target.ToLower())
                 {
                     case "take":
-                        var txId = await _faucetService.TaskAsync(
+                        var txId = await _faucetService.TakeAsync(
                             symbol.IsNullOrWhiteSpace() ? AElfCliConsts.AElfNativeSymbol : symbol,
                             count.IsNullOrWhiteSpace() ? 100_00000000 : long.Parse(count));
                         await _blockChainService.CheckTransactionResultAsync(txId);
@@ -85,7 +85,7 @@ namespace AElf.Cli.Commands
 
         public string GetShortDescription()
         {
-            return "Take ELF token from AElf Test Net.";
+            return "Take test token from AElf Test Net.";
         }
         
         public static class Options
