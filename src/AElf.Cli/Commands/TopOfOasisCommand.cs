@@ -13,7 +13,7 @@ namespace AElf.Cli.Commands
 {
     public class TopOfOasisCommand: IAElfCommand, ITransientDependency
     {
-        public const string Name = "top-of-oasis";
+        public const string Name = "oasis";
 
         private readonly ITopOfOasisService _topOfOasisService;
         private readonly IUserContext _userContext;
@@ -49,7 +49,7 @@ namespace AElf.Cli.Commands
                         break;
                     default:
                         throw new AElfCliUsageException(
-                            $"Top Of Oasis command: {commandLineArgs.Target} is not supported!" +
+                            $"Oasis command: {commandLineArgs.Target} is not supported!" +
                             Environment.NewLine + Environment.NewLine +
                             GetUsageInfo());
                 }
@@ -69,13 +69,13 @@ namespace AElf.Cli.Commands
             sb.AppendLine();
             sb.AppendLine("Usage:");
             sb.AppendLine();
-            sb.AppendLine("    aelf top-of-oasis <command>");
+            sb.AppendLine("    aelf oasis <command>");
             sb.AppendLine();
             sb.AppendLine("    command: upload-project");
             sb.AppendLine();
             sb.AppendLine("Examples:");
             sb.AppendLine();
-            sb.AppendLine("    aelf top-of-oasis upload-project");
+            sb.AppendLine("    aelf oasis upload-project");
             sb.AppendLine();
             sb.AppendLine("See the documentation for more info: https://docs.aelf.io");
 
