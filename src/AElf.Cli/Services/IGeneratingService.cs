@@ -24,7 +24,10 @@ namespace AElf.Cli.Services
         private const string ProtobufPlaceholder = "hello_world";
 
         private readonly List<string> _replaceExtensions = new List<string>
-            {".cs", ".proto", ".csproj", ".json", ".config", ".sln"};
+            {".cs", ".proto", ".csproj", ".json", ".config", ".sln",".cake",".targets"};
+        
+        private readonly List<string> _hiddenFiles = new List<string>
+            {"gitignore"};
 
         public ILogger<GeneratingService> Logger { get; set; }
 
@@ -42,6 +45,11 @@ namespace AElf.Cli.Services
         {
             return replacements.Aggregate(input,
                 (current, replacement) => current.Replace(replacement.Item1, replacement.Item2));
+        }
+        
+        private string ReplaceFileName(string input)
+        {
+            return _hiddenFiles.Aggregate(input, (current, f) => current.Replace(f, "." + f));
         }
 
         private List<Tuple<string, string>> GetReplacements(string projectName)
@@ -119,6 +127,8 @@ namespace AElf.Cli.Services
                 {
                     var destFileName = originFile.FullName.Replace(originDir.FullName, "");
                     destFileName = ReplaceContent(destFileName, replacements);
+                    destFileName = ReplaceFileName(destFileName);
+
                     destFileName = destDir.FullName + destFileName;
                     originFile.CopyTo(destFileName, true);
 
@@ -136,9 +146,6 @@ namespace AElf.Cli.Services
                     File.WriteAllText(file, content);
                 }
             }
-
-            Logger.LogInformation("Created successfully!");
-            Logger.LogInformation($"Directory: {Path.GetFullPath(path)}");
         }
     }
 }
