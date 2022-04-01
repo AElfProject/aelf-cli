@@ -30,21 +30,25 @@ namespace AElf.Cli.Commands
             var codePath = commandLineArgs.Options.GetOrNull(Options.CodePath.Short, Options.CodePath.Long);
             var contractAddress =
                 commandLineArgs.Options.GetOrNull(Options.ContractAddress.Short, Options.ContractAddress.Long);
+            bool.TryParse(commandLineArgs.Options.GetOrNull(Options.UseProposal.Short, Options.UseProposal.Long),
+                out var proposal);
 
             var code = await File.ReadAllBytesAsync(codePath);
 
-            var txId = await _blockChainService.DeploySmartContractAsync(code, category, contractAddress);
+            var txId = await _blockChainService.DeploySmartContractAsync(code, category, contractAddress, proposal);
             var result = await _blockChainService.CheckTransactionResultAsync(txId);
 
             if (result.Status == TransactionResultStatus.Mined.ToString().ToUpper())
             {
                 Logger.LogInformation(
-                    $"Smart contract deployed successfully! Contract address is: {Address.Parser.ParseFrom(ByteArrayHelper.HexStringToByteArray(result.ReturnValue)).ToBase58()}");
+                    proposal
+                        ? $"Smart contract submitted successfully! Proposal id is: {Hash.Parser.ParseFrom(ByteArrayHelper.HexStringToByteArray(result.ReturnValue)).ToHex()}"
+                        : $"Smart contract deployed successfully! Contract address is: {Address.Parser.ParseFrom(ByteArrayHelper.HexStringToByteArray(result.ReturnValue)).ToBase58()}");
             }
             else
             {
                 Logger.LogInformation(
-                    $"Smart contract deploy failed! Error: {result}");
+                    $"Smart contract deploy failed! Error: {result.Error}");
             }
         }
 
@@ -61,11 +65,12 @@ namespace AElf.Cli.Commands
             //sb.AppendLine("    -c |--category:           Contract category.");
             sb.AppendLine("    -cp|--code-path:          Contract code file path.");
             sb.AppendLine("    -ca|--contract-address:   Contract address. If you want to update a contract, you need to input the address of the contract to update.");
+            sb.AppendLine("    -up|--use-proposal:       Whether to deploy the contract using the proposal.");
             sb.AppendLine();
             sb.AppendLine("Examples:");
             sb.AppendLine();
             sb.AppendLine("    aelf deploy -cp d:\\my-project\\MyContract.dll.patched");
-            sb.AppendLine("    aelf deploy -cp d:\\my-project\\MyContract-v2.dll.patched -ca XDrKT2syN...8UJym7YP9W9");
+            sb.AppendLine("    aelf deploy -cp d:\\my-project\\MyContract-v2.dll.patched -ca XDrKT2syN...8UJym7YP9W9 -cp true");
             sb.AppendLine();
             sb.AppendLine("See the documentation for more info: https://docs.aelf.io");
 
@@ -95,6 +100,12 @@ namespace AElf.Cli.Commands
             {
                 public const string Short = "ca";
                 public const string Long = "contract-address";
+            }
+            
+            public static class UseProposal
+            {
+                public const string Short = "up";
+                public const string Long = "use-proposal";
             }
         }
     }

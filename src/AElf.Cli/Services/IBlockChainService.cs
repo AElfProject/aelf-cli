@@ -18,7 +18,7 @@ namespace AElf.Cli.Services
 
         Task<TransactionResultDto> CheckTransactionResultAsync(string txId);
 
-        Task<string> DeploySmartContractAsync(byte[] codes, int category = 0, string contractAddress = null);
+        Task<string> DeploySmartContractAsync(byte[] codes, int category = 0, string contractAddress = null, bool createProposal = false);
     }
 
     public class BlockChainService : IBlockChainService, ITransientDependency
@@ -100,17 +100,18 @@ namespace AElf.Cli.Services
         }
 
         public async Task<string> DeploySmartContractAsync(byte[] codes, int category = 0,
-            string contractAddress = null)
+            string contractAddress = null, bool createProposal = false)
         {
             var client = _aelfClientFactory.CreateClient();
             var chain = await client.GetChainStatusAsync();
-            
+
             if (string.IsNullOrWhiteSpace(contractAddress))
             {
                 var @params = new JObject();
                 @params["category"] = category;
                 @params["code"] = ByteString.CopyFrom(codes).ToBase64();
-                return await SendTransactionAsync(chain.GenesisContractAddress, "DeploySmartContract",
+                return await SendTransactionAsync(chain.GenesisContractAddress,
+                    createProposal ? "ProposeNewContract" : "DeploySmartContract",
                     JsonConvert.SerializeObject(@params));
             }
             else
@@ -118,7 +119,8 @@ namespace AElf.Cli.Services
                 var @params = new JObject();
                 @params["code"] = ByteString.CopyFrom(codes).ToBase64();
                 @params["address"] = new JObject {["value"] = Address.FromBase58(contractAddress).Value.ToBase64()};
-                return await SendTransactionAsync(chain.GenesisContractAddress, "UpdateSmartContract",
+                return await SendTransactionAsync(chain.GenesisContractAddress,
+                    createProposal ? "ProposeUpdateContract" : "UpdateSmartContract",
                     JsonConvert.SerializeObject(@params));
             }
         }
