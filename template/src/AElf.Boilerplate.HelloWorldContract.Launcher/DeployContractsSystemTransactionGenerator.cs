@@ -49,7 +49,7 @@ namespace AElf.Boilerplate.HelloWorldContract.Launcher
         private byte[] GetContractCodes()
         {
             return ContractsDeployer.GetContractCodes<DeployContractsSystemTransactionGenerator>(_contractOptions
-                .GenesisContractDir)["AElf.Contracts.HelloWorldContract"];
+                .GenesisContractDir)["AElf.Contracts.HelloWorld"];
         }
     }
 }

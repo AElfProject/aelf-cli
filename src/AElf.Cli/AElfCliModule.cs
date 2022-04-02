@@ -20,6 +20,12 @@ namespace AElf.Cli
                 options.Commands[AccountsCommand.Name] = typeof(AccountsCommand);
                 options.Commands[CreateCommand.Name] = typeof(CreateCommand);
                 options.Commands[NewCommand.Name] = typeof(NewCommand);
+                options.Commands[CallCommand.Name] = typeof(CallCommand);
+                options.Commands[SendCommand.Name] = typeof(SendCommand);
+                options.Commands[ConfigCommand.Name] = typeof(ConfigCommand);
+                options.Commands[FaucetCommand.Name] = typeof(FaucetCommand);
+                options.Commands[TopOfOasisCommand.Name] = typeof(TopOfOasisCommand);
+                options.Commands[DeployCommand.Name] = typeof(DeployCommand);
             });
         }
     }

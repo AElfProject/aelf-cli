@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using AElf.Blockchains.Single;
 using Microsoft.AspNetCore.Builder;
@@ -24,6 +25,11 @@ namespace AElf.Cli
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var type = typeof(Startup);
+            var currentDirectory = Path.GetDirectoryName(type.Assembly.Location);
+            var hostingEnvironment = services.GetHostingEnvironment();
+            hostingEnvironment.ContentRootPath = currentDirectory;
+
             AddApplication<SingleNodeChainAElfModule>(services);
             services.AddCors(options =>
             {

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using AElf.Cli.Args;
@@ -22,18 +23,25 @@ namespace AElf.Cli.Commands
             _generatingService = generatingService;
             Logger = NullLogger<NewCommand>.Instance;
         }
-        
+
         public Task ExecuteAsync(CommandLineArgs commandLineArgs)
         {
             if (commandLineArgs.Target.IsNullOrWhiteSpace())
             {
-                Logger.LogInformation(GetUsageInfo());
-                return Task.CompletedTask;
+                throw new AElfCliUsageException(
+                    "Project name is missing!" +
+                    Environment.NewLine + Environment.NewLine +
+                    GetUsageInfo()
+                );
             }
 
-            commandLineArgs.Options.TryGetValue(Options.OutputFolder, out var outputFolder);
-
+            var outputFolder = commandLineArgs.Options.GetOrNull(Options.OutputFolder.Short, Options.OutputFolder.Long);
+            outputFolder = outputFolder.IsNullOrWhiteSpace() ? Directory.GetCurrentDirectory() : outputFolder;
+            
             _generatingService.Generate(commandLineArgs.Target, outputFolder);
+            
+            Logger.LogInformation("Created successfully!");
+            Logger.LogInformation($"Directory: {Path.GetFullPath(outputFolder)}");
             return Task.CompletedTask;
         }
 
@@ -50,7 +58,12 @@ namespace AElf.Cli.Commands
             sb.AppendLine();
             sb.AppendLine("Options:");
             sb.AppendLine();
-            sb.AppendLine("    -o: Specifies the output folder. Default value is the current directory.");
+            sb.AppendLine("    -o|--output-folder: Specifies the output folder. Default value is the current directory.");
+            sb.AppendLine();
+            sb.AppendLine("Examples:");
+            sb.AppendLine();
+            sb.AppendLine("    aelf new YourCompany.YourProject");
+            sb.AppendLine("    aelf new YourCompany.YourProject -o d:\\my-project");
             sb.AppendLine();
             sb.AppendLine("See the documentation for more info: https://docs.aelf.io");
 
@@ -62,10 +75,15 @@ namespace AElf.Cli.Commands
             return "Generates a new contract development solution based on the AElf Boilerplate templates.";
         }
         
+        public static class Options
+        {
+            public static class OutputFolder
+            {
+                public const string Short = "o";
+                public const string Long = "output-folder";
+            }
+        }
     }
     
-    public static class Options
-    {
-        public const string OutputFolder = "o";
-    }
+    
 }
