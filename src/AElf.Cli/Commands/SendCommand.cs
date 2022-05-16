@@ -12,9 +12,9 @@ namespace AElf.Cli.Commands
     public class SendCommand : IAElfCommand, ITransientDependency
     {
         public const string Name = "send";
-        
+
         private readonly IBlockChainService _blockChainService;
-        
+
         public ILogger<CallCommand> Logger { get; set; }
 
         public SendCommand(IBlockChainService blockChainService)
@@ -22,7 +22,7 @@ namespace AElf.Cli.Commands
             _blockChainService = blockChainService;
             Logger = NullLogger<CallCommand>.Instance;
         }
-        
+
         public async Task ExecuteAsync(CommandLineArgs commandLineArgs)
         {
             var method = commandLineArgs.Options.GetOrNull(Options.Method.Short, Options.Method.Long);
@@ -34,7 +34,7 @@ namespace AElf.Cli.Commands
                     GetUsageInfo()
                 );
             }
-            
+
             if (string.IsNullOrWhiteSpace(method))
             {
                 throw new AElfCliUsageException(
@@ -43,7 +43,7 @@ namespace AElf.Cli.Commands
                     GetUsageInfo()
                 );
             }
-            
+
             var @params = commandLineArgs.Options.GetOrNull(Options.Params.Short, Options.Params.Long);
 
             var result =
@@ -74,7 +74,7 @@ namespace AElf.Cli.Commands
         {
             return "Execute a method on a contract.";
         }
-        
+
         public static class Options
         {
             public static class Method
@@ -82,7 +82,7 @@ namespace AElf.Cli.Commands
                 public const string Short = "cm";
                 public const string Long = "method";
             }
-            
+
             public static class Params
             {
                 public const string Short = "cp";

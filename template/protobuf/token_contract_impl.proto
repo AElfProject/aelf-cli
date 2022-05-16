@@ -116,13 +116,22 @@ message RegisterCrossChainTokenContractAddressInput{
 }
 
 message ValidateTokenInfoExistsInput{
+    // The symbol of the token.
     string symbol = 1;
+    // The full name of the token.
     string token_name = 2;
+    // The total supply of the token.
     int64 total_supply = 3;
+    // The precision of the token.
     int32 decimals = 4;
+    // The address that created the token.
     aelf.Address issuer = 5;
+    // A flag indicating if this token is burnable.
     bool is_burnable = 6;
+    // The chain id of the token.
     int32 issue_chain_id = 7;
+    // The external information of the token.
+    map<string, string> external_info = 8;
 }
 
 message UpdateRentalInput {

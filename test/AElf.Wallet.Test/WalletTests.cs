@@ -2,6 +2,7 @@ using AElf.BIP39;
 using AElf.Cryptography;
 using AElf.HDWallet;
 using AElf.HDWallet.Core;
+using AElf.Types;
 using Shouldly;
 using Volo.Abp.Testing;
 using Xunit;
@@ -46,6 +47,8 @@ namespace AElf.Wallet.Test
         [Fact]
         public void HDWalletTests()
         {
+            var foo = Hash.LoadFromHex("faed1e53a2fc11baaa38aebc9a899a176fcf04288adf9cd3f3248e173b894e6b");
+            var bar = foo.Value.ToBase64();
             const string mnemonicValue = "rapid apart clip require dragon property hurry ensure coil ship torch include squirrel jewel window";
             const string expectedSeed =
                 "ba78b733ffe929e400f844751a48dded5ebc7c62635a1590e97b066e3b9e8b890741602a69279c45ed5d17dfd6e8703e3c575de4ea4712868df5f1997e2b97b2";

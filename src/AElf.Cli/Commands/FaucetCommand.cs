@@ -36,12 +36,12 @@ namespace AElf.Cli.Commands
             var endpoint = _userContext.Endpoint;
             try
             {
-                _userContext.Endpoint = AElfCliConsts.TestNetEndpoint;
-                switch (commandLineArgs.Target.ToLower())
+                _userContext.Endpoint = AElfCliConstants.TestNetMainChainEndpoint;
+                switch (commandLineArgs.Target?.ToLower())
                 {
                     case "take":
                         var txId = await _faucetService.TakeAsync(
-                            symbol.IsNullOrWhiteSpace() ? AElfCliConsts.AElfNativeSymbol : symbol,
+                            symbol.IsNullOrWhiteSpace() ? AElfCliConstants.AElfNativeSymbol : symbol,
                             count.IsNullOrWhiteSpace() ? 100_00000000 : long.Parse(count));
                         await _blockChainService.CheckTransactionResultAsync(txId);
                         break;

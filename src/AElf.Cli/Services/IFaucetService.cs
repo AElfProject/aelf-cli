@@ -21,11 +21,14 @@ namespace AElf.Cli.Services
 
         public async Task<string> TakeAsync(string symbol, long amount)
         {
-            var @params = new JObject();
-            @params["symbol"] = symbol;
-            @params["amount"] = amount;
+            var @params = new JObject
+            {
+                ["symbol"] = symbol,
+                ["amount"] = amount
+            };
 
-            return await _blockChainService.SendTransactionAsync(AElfCliConsts.FaucetContractAddress, "Take", JsonConvert.SerializeObject(@params));
+            return await _blockChainService.SendTransactionAsync(AElfCliConstants.FaucetContractAddress, "Take",
+                JsonConvert.SerializeObject(@params));
         }
     }
 }

@@ -20,7 +20,7 @@ namespace AElf.Cli.Services
         
         public async Task<string> UploadProjectAsync()
         {
-            return await _blockChainService.SendTransactionAsync(AElfCliConsts.TopOfOasisContractAddress, "UploadProject");
+            return await _blockChainService.SendTransactionAsync(AElfCliConstants.TopOfOasisContractAddress, "UploadProject");
         }
     }
 }

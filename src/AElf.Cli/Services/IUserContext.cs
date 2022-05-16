@@ -29,7 +29,7 @@ namespace AElf.Cli.Services
             {
                 if (string.IsNullOrWhiteSpace(_endpoint))
                 {
-                    _endpoint = _configService.Get(AElfCliConsts.EndpointConfigKey);
+                    _endpoint = _configService.Get(AElfCliConstants.EndpointConfigKey);
                 }
 
                 return _endpoint;
@@ -43,7 +43,7 @@ namespace AElf.Cli.Services
             {
                 if (string.IsNullOrWhiteSpace(_account))
                 {
-                    _account = _configService.Get(AElfCliConsts.AccountConfigKey);
+                    _account = _configService.Get(AElfCliConstants.AccountConfigKey);
                 }
 
                 return _account;
@@ -57,7 +57,7 @@ namespace AElf.Cli.Services
             {
                 if (string.IsNullOrWhiteSpace(_password))
                 {
-                    _password = _configService.Get(AElfCliConsts.PasswordConfigKey);
+                    _password = _configService.Get(AElfCliConstants.PasswordConfigKey);
                 }
 
                 return _password;

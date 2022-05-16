@@ -26,7 +26,7 @@ dotnet tool update --global --add-source ./nupkg aelf.cli
 
 ## How to add new command
 
-1. Add `*Command.cs` file to `Commands` dir and make this class inheri from `IAElfCommand`
+1. Add `*Command.cs` file to `Commands` dir and make this class inherit from `IAElfCommand`
 
 2. Impl following 3 methods
 - ExecuteAsync：The logic of executing this command

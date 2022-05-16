@@ -6,10 +6,11 @@ using AElf.Cli.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Volo.Abp.DependencyInjection;
 
 namespace AElf.Cli.Commands
 {
-    public class AccountsCommand : IAElfCommand
+    public class AccountsCommand : IAElfCommand, ITransientDependency
     {
         public const string Name = "accounts";
 

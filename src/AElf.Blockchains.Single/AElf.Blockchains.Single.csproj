@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <NoWarn>0436</NoWarn>
         <Description>Main module for a single-node blockchain (for testing basic web api and contracts).</Description>
     </PropertyGroup>
@@ -45,7 +45,7 @@
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </PackageReference>
-        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.0.0">
+        <PackageReference Include="AElf.Contracts.MultiToken" Version="1.1.1-18963">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
             <OutputItemType>Contract</OutputItemType>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

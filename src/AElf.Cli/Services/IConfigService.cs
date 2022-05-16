@@ -42,14 +42,14 @@ namespace AElf.Cli.Services
 
         private string GetConfigPath()
         {
-            return Path.Combine(AElfCliConsts.DataPath, "aelfcli.conf");
+            return Path.Combine(AElfCliConstants.DataPath, "aelfcli.conf");
         }
 
         private Dictionary<string, string> GetConfig()
         {
             var configs = GetConfigFromFile();
             foreach (var key in new List<string>
-                {AElfCliConsts.EndpointConfigKey, AElfCliConsts.AccountConfigKey, AElfCliConsts.PasswordConfigKey})
+                {AElfCliConstants.EndpointConfigKey, AElfCliConstants.AccountConfigKey, AElfCliConstants.PasswordConfigKey})
             {
                 if (configs.ContainsKey(key))
                 {

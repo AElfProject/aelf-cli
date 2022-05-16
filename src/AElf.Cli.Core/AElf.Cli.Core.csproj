@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <PackageId>AElf.Cli.Core</PackageId>
+        <AssemblyName>AElf.Cli.Core</AssemblyName>
+        <RootNamespace>AElf.Cli.Core</RootNamespace>
+        <LangVersion>10.0</LangVersion>
+        <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Templates" />
+    </ItemGroup>
+
+</Project>

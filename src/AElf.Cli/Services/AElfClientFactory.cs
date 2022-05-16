@@ -13,11 +13,18 @@ namespace AElf.Cli.Services
             _userContext = userContext;
         }
 
-        public AElfClient CreateClient()
+        public AElfClient CreateClient(string endpoint = null)
         {
-            if (_client == null)
+            if (endpoint == null)
             {
-                _client = new AElfClient(_userContext.Endpoint);
+                if (_client == null)
+                {
+                    _client = new AElfClient(_userContext.Endpoint);
+                }
+            }
+            else
+            {
+                _client = new AElfClient(endpoint);
             }
 
             return _client;

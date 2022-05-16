@@ -35,8 +35,8 @@ namespace AElf.Cli.Commands
             var endpoint = _userContext.Endpoint;
             try
             {
-                _userContext.Endpoint = AElfCliConsts.MainNetEndpoint;
-                switch (commandLineArgs.Target.ToLower())
+                _userContext.Endpoint = AElfCliConstants.MainNetEndpoint;
+                switch (commandLineArgs.Target?.ToLower())
                 {
                     case "upload-project":
                         var txId = await _topOfOasisService.UploadProjectAsync();

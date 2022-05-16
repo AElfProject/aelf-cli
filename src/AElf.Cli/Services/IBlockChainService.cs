@@ -12,13 +12,28 @@ namespace AElf.Cli.Services
 {
     public interface IBlockChainService
     {
-        Task<string> SendTransactionAsync(string contract, string method, string @params = null);
+        Task<string> SendTransactionAsync(string contract, string method, string @params = null,
+            string endpoint = null);
 
-        Task<string> ExecuteTransactionAsync(string contract, string method,string @params = null);
+        Task<string> ExecuteTransactionAsync(string contract, string method, string @params = null,
+            string endpoint = null);
 
-        Task<TransactionResultDto> CheckTransactionResultAsync(string txId);
+        Task<TransactionResultDto> CheckTransactionResultAsync(string txId, string endpoint = null);
 
-        Task<string> DeploySmartContractAsync(byte[] codes, int category = 0, string contractAddress = null, bool createProposal = false);
+        Task<MerklePathDto> GetMerklePathByTransactionIdAsync(string transactionId, string endpoint = null);
+
+        Task<TransactionResultDto> GetTransactionResultAsync(string transactionId, string endpoint = null);
+
+        Task<string> DeploySmartContractAsync(byte[] codes, int category = 0, string contractAddress = null,
+            bool createProposal = false, string endpoint = null);
+
+        Task<string> GenerateRawTransactionAsync(string from, string to, string methodName, string @params,
+            string endpoint = null);
+
+        Task<(string, string)> SendTransactionReturnRawAsync(string contract, string method,
+            string @params = null, string endpoint = null);
+
+        Task<string> GetContractAddressByNameAsync(string contractName, string endpoint = null);
     }
 
     public class BlockChainService : IBlockChainService, ITransientDependency
@@ -26,10 +41,11 @@ namespace AElf.Cli.Services
         private readonly IUserContext _userContext;
         private readonly IAccountsService _accountsService;
         private readonly AElfClientFactory _aelfClientFactory;
-        
+
         public ILogger<BlockChainService> Logger { get; set; }
 
-        public BlockChainService(IUserContext userContext, IAccountsService accountsService, AElfClientFactory aelfClientFactory)
+        public BlockChainService(IUserContext userContext, IAccountsService accountsService,
+            AElfClientFactory aelfClientFactory)
         {
             _userContext = userContext;
             _accountsService = accountsService;
@@ -38,43 +54,75 @@ namespace AElf.Cli.Services
             Logger = NullLogger<BlockChainService>.Instance;
         }
 
-        public async Task<string> SendTransactionAsync(string contract, string method, string @params = null)
+        public async Task<string> SendTransactionAsync(string contract, string method, string @params = null,
+            string endpoint = null)
         {
             var contractAddress = await GetContractAddressAsync(contract);
-            var rawTransaction = await GenerateRawTransactionAsync(_userContext.Account, contractAddress, method, FormatParams(@params));
+            var rawTransaction = await GenerateRawTransactionAsync(_userContext.Account, contractAddress, method,
+                FormatParams(@params), endpoint);
             var signature = await GetSignatureAsync(rawTransaction);
 
-            var rawTransactionResult = await _aelfClientFactory.CreateClient().SendRawTransactionAsync(new SendRawTransactionInput()
-            {
-                Transaction = rawTransaction,
-                Signature = signature,
-            });
+            var rawTransactionResult = await _aelfClientFactory.CreateClient(endpoint).SendRawTransactionAsync(
+                new SendRawTransactionInput
+                {
+                    Transaction = rawTransaction,
+                    Signature = signature,
+                });
 
             Logger.LogInformation($"Send transaction: {rawTransactionResult.TransactionId} successfully.");
-            
+
             return rawTransactionResult.TransactionId;
         }
 
-        public async Task<string> ExecuteTransactionAsync(string contract, string method, string @params = null)
+        public async Task<(string, string)> SendTransactionReturnRawAsync(string contract, string method,
+            string @params = null, string endpoint = null)
         {
             var contractAddress = await GetContractAddressAsync(contract);
-            var rawTransaction = await GenerateRawTransactionAsync(_userContext.Account, contractAddress, method, FormatParams(@params));
+            var rawTransaction = await GenerateRawTransactionAsync(_userContext.Account, contractAddress, method,
+                FormatParams(@params), endpoint);
             var signature = await GetSignatureAsync(rawTransaction);
 
-            var rawTransactionResult = await _aelfClientFactory.CreateClient().ExecuteRawTransactionAsync(new ExecuteRawTransactionDto()
-            {
-                RawTransaction = rawTransaction,
-                Signature = signature,
-            });
+            var rawTransactionResult = await _aelfClientFactory.CreateClient(endpoint).SendRawTransactionAsync(
+                new SendRawTransactionInput
+                {
+                    Transaction = rawTransaction,
+                    Signature = signature,
+                });
+
+            Logger.LogInformation($"Send transaction: {rawTransactionResult.TransactionId} successfully.");
+
+            return (rawTransactionResult.TransactionId, rawTransaction);
+        }
+
+        public async Task<string> GetContractAddressByNameAsync(string contractName, string endpoint = null)
+        {
+            return (await _aelfClientFactory.CreateClient(endpoint)
+                .GetContractAddressByNameAsync(HashHelper.ComputeFrom(contractName))).ToBase58();
+        }
+
+        public async Task<string> ExecuteTransactionAsync(string contract, string method, string @params = null,
+            string endpoint = null)
+        {
+            var contractAddress = await GetContractAddressAsync(contract);
+            var rawTransaction =
+                await GenerateRawTransactionAsync(_userContext.Account, contractAddress, method, FormatParams(@params));
+            var signature = await GetSignatureAsync(rawTransaction);
+
+            var rawTransactionResult = await _aelfClientFactory.CreateClient(endpoint).ExecuteRawTransactionAsync(
+                new ExecuteRawTransactionDto
+                {
+                    RawTransaction = rawTransaction,
+                    Signature = signature,
+                });
 
             return rawTransactionResult;
         }
 
-        public async Task<TransactionResultDto> CheckTransactionResultAsync(string txId)
+        public async Task<TransactionResultDto> CheckTransactionResultAsync(string txId, string endpoint = null)
         {
             Logger.LogInformation("Checking transaction result...");
-            var client = _aelfClientFactory.CreateClient();
-            
+            var client = _aelfClientFactory.CreateClient(endpoint);
+
             var result = await client.GetTransactionResultAsync(txId);
             var i = 0;
             while (i < 10)
@@ -84,8 +132,9 @@ namespace AElf.Cli.Services
                     Logger.LogInformation($"Transaction: {txId} executed successfully.");
                     break;
                 }
-                
-                if (result.Status == TransactionResultStatus.Failed.ToString().ToUpper() || result.Status == TransactionResultStatus.NodeValidationFailed.ToString().ToUpper())
+
+                if (result.Status == TransactionResultStatus.Failed.ToString().ToUpper() || result.Status ==
+                    TransactionResultStatus.NodeValidationFailed.ToString().ToUpper())
                 {
                     Logger.LogWarning($"Transaction: {txId} failed. Error: {result.Error}");
                     break;
@@ -95,30 +144,50 @@ namespace AElf.Cli.Services
                 result = await client.GetTransactionResultAsync(txId);
                 i++;
             }
-            
+
             return result;
         }
 
-        public async Task<string> DeploySmartContractAsync(byte[] codes, int category = 0,
-            string contractAddress = null, bool createProposal = false)
+        public Task<MerklePathDto> GetMerklePathByTransactionIdAsync(string transactionId, string endpoint = null)
         {
-            var client = _aelfClientFactory.CreateClient();
+            var client = _aelfClientFactory.CreateClient(endpoint);
+            client.CreateRawTransactionAsync(new CreateRawTransactionInput
+            {
+
+            });
+            return client.GetMerklePathByTransactionIdAsync(transactionId);
+        }
+
+        public async Task<TransactionResultDto> GetTransactionResultAsync(string transactionId, string endpoint = null)
+        {
+            var client = _aelfClientFactory.CreateClient(endpoint);
+            return await client.GetTransactionResultAsync(transactionId);
+        }
+
+        public async Task<string> DeploySmartContractAsync(byte[] codes, int category = 0,
+            string contractAddress = null, bool createProposal = false, string endpoint = null)
+        {
+            var client = _aelfClientFactory.CreateClient(endpoint);
             var chain = await client.GetChainStatusAsync();
 
             if (string.IsNullOrWhiteSpace(contractAddress))
             {
-                var @params = new JObject();
-                @params["category"] = category;
-                @params["code"] = ByteString.CopyFrom(codes).ToBase64();
+                var @params = new JObject
+                {
+                    ["category"] = category,
+                    ["code"] = ByteString.CopyFrom(codes).ToBase64()
+                };
                 return await SendTransactionAsync(chain.GenesisContractAddress,
                     createProposal ? "ProposeNewContract" : "DeploySmartContract",
                     JsonConvert.SerializeObject(@params));
             }
             else
             {
-                var @params = new JObject();
-                @params["code"] = ByteString.CopyFrom(codes).ToBase64();
-                @params["address"] = new JObject {["value"] = Address.FromBase58(contractAddress).Value.ToBase64()};
+                var @params = new JObject
+                {
+                    ["code"] = ByteString.CopyFrom(codes).ToBase64(),
+                    ["address"] = new JObject { ["value"] = Address.FromBase58(contractAddress).Value.ToBase64() }
+                };
                 return await SendTransactionAsync(chain.GenesisContractAddress,
                     createProposal ? "ProposeUpdateContract" : "UpdateSmartContract",
                     JsonConvert.SerializeObject(@params));
@@ -133,24 +202,28 @@ namespace AElf.Cli.Services
             return ByteString.CopyFrom(signature).ToHex();
         }
 
-        private async Task<string> GetContractAddressAsync(string contract)
+        private async Task<string> GetContractAddressAsync(string contract, string endpoint = null)
         {
             var contractAddress = contract;
             if (contract.StartsWith("AElf.ContractNames."))
             {
-                contractAddress = (await _aelfClientFactory.CreateClient().GetContractAddressByNameAsync(HashHelper.ComputeFrom(contract))).ToBase58();
+                contractAddress = (await _aelfClientFactory.CreateClient(endpoint)
+                    .GetContractAddressByNameAsync(HashHelper.ComputeFrom(contract))).ToBase58();
             }
 
             return contractAddress;
         }
 
-        private async Task<string> GenerateRawTransactionAsync(string from, string to,string method, string @params)
+        public async Task<string> GenerateRawTransactionAsync(string from, string to, string method, string @params,
+            string endpoint = null)
         {
-            var client = _aelfClientFactory.CreateClient();
+            var client = _aelfClientFactory.CreateClient(endpoint);
             var status = await client.GetChainStatusAsync();
             var height = status.BestChainHeight;
             var blockHash = status.BestChainHash;
-            
+
+            Logger.LogInformation($"Actual params: {@params}");
+
             var rawTransaction = await client.CreateRawTransactionAsync(new CreateRawTransactionInput
             {
                 From = from,
@@ -166,6 +239,7 @@ namespace AElf.Cli.Services
 
         private string FormatParams(string @params)
         {
+            Logger.LogInformation($"Formatting params: {@params}");
             if (string.IsNullOrWhiteSpace(@params))
             {
                 @params = "{}";

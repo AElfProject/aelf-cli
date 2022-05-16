@@ -159,7 +159,7 @@ namespace AElf.Cli.Infrastructure
 
         private string GetKeystoreDirectoryPath()
         {
-            return Path.Combine(AElfCliConsts.DataPath, KeyFolderName);
+            return Path.Combine(AElfCliConstants.DataPath, KeyFolderName);
         }
     }
 }

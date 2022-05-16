@@ -6,10 +6,11 @@ using AElf.BIP39.Types;
 using AElf.Cli.Args;
 using AElf.Cryptography;
 using Microsoft.Extensions.Logging;
+using Volo.Abp.DependencyInjection;
 
 namespace AElf.Cli.Commands
 {
-    public class CreateCommand : IAElfCommand
+    public class CreateCommand : IAElfCommand, ITransientDependency
     {
         private readonly IBip39Service _bip39Service;
         private readonly IMnemonicService _mnemonicService;
@@ -40,12 +41,12 @@ namespace AElf.Cli.Commands
 
         public string GetUsageInfo()
         {
-            throw new System.NotImplementedException();
+            return string.Empty;
         }
 
         public string GetShortDescription()
         {
-            throw new System.NotImplementedException();
+            return string.Empty;
         }
     }
 }
