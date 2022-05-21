@@ -1,3 +1,4 @@
+using System.Globalization;
 using AElf.BIP39;
 using AElf.Cli.Commands;
 using Volo.Abp.Autofac;
@@ -13,6 +14,7 @@ namespace AElf.Cli
     {
         public override void ConfigureServices(ServiceConfigurationContext context)
         {
+            CultureInfo.CurrentCulture = new CultureInfo("en-US", false);
             Configure<AElfCliOptions>(options =>
             {
                 options.Commands[HelpCommand.Name] = typeof(HelpCommand);
@@ -27,7 +29,6 @@ namespace AElf.Cli
                 options.Commands[TopOfOasisCommand.Name] = typeof(TopOfOasisCommand);
                 options.Commands[DeployCommand.Name] = typeof(DeployCommand);
                 options.Commands[CreateTokenCommand.Name] = typeof(CreateTokenCommand);
-                //options.Commands[NFTCommand.Name] = typeof(NFTCommand);
             });
         }
     }

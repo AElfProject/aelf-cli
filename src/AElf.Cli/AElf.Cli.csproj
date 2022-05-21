@@ -7,6 +7,7 @@
         <ToolCommandName>aelf</ToolCommandName>
         <PackAsTool>true</PackAsTool>
         <PackageOutputPath>./nupkg</PackageOutputPath>
+        <Version>0.2.0</Version>
     </PropertyGroup>
 
     <ItemGroup>

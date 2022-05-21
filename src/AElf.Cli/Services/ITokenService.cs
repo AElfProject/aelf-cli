@@ -10,6 +10,7 @@ public interface ITokenService
 {
     Task<string> CreateAsync(string symbol, string tokenName, long totalSupply, int decimals, string issuer,
         bool isBurnable, int issueChainId);
+    Task<string> CrossChainCreateAsync(string symbol);
 }
 
 public class TokenService : ITokenService, ITransientDependency
@@ -41,5 +42,10 @@ public class TokenService : ITokenService, ITransientDependency
         return await _blockChainService.SendTransactionAsync(AElfCliConstants.TestMainChainTokenContractAddress,
             "Create",
             JsonConvert.SerializeObject(@params));
+    }
+
+    public Task<string> CrossChainCreateAsync(string symbol)
+    {
+        throw new System.NotImplementedException();
     }
 }

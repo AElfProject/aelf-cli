@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -38,7 +39,6 @@ namespace AElf.Cli
                 .RunAsync(args);
 
             application.Shutdown();
-
             Log.CloseAndFlush();
         }
     }
