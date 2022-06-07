@@ -11,32 +11,34 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Volo.Abp.Autofac" Version="5.2.0" />
+        <PackageReference Include="Volo.Abp.Autofac" Version="5.2.2" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.*" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="4.2.0" />
         <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
         <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
 
-        <PackageReference Include="Nethereum.KeyStore" Version="4.3.0" />
-        <PackageReference Include="Nethereum.Web3" Version="4.3.0" />
+        <PackageReference Include="Nethereum.KeyStore" Version="4.5.0" />
+        <PackageReference Include="Nethereum.Web3" Version="4.5.0" />
 
-        <PackageReference Include="AElf.Types" Version="1.0.0" />
-        <PackageReference Include="AElf.Core" Version="1.0.0" />
-        <PackageReference Include="AElf.Client" Version="1.1.0" />
-        <PackageReference Include="AElf.CSharp.Core" Version="1.0.0" />
+        <PackageReference Include="AElf.Types" Version="1.2.0-rc-19145" />
+        <PackageReference Include="AElf.Core" Version="1.2.0-rc-19145" />
+        <PackageReference Include="AElf.CSharp.Core" Version="1.2.0-rc-19145" />
 
-        <PackageReference Include="AElf.ContractDeployer" Version="1.0.0" />
-        <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="5.2.0" />
+        <PackageReference Include="AElf.ContractDeployer" Version="1.2.0-rc-19145" />
+        <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="5.2.2" />
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
+
+        <PackageReference Include="AElf.Client" Version="1.2.0-rc" />
+        <PackageReference Include="AElf.Client.Abp" Version="1.2.0-rc" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.0.0">
+        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.2.0-rc-19145">
             <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.chain</PackageName>
         </PackageReference>
-        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.0.0">
+        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.2.0-rc-19145">
             <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.net</PackageName>
         </PackageReference>
@@ -78,8 +80,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AElf.BIP39\AElf.BIP39.csproj" />
-      <ProjectReference Include="..\AElf.Blockchains.Single\AElf.Blockchains.Single.csproj" />
+        <ProjectReference Include="..\AElf.BIP39\AElf.BIP39.csproj" />
+        <ProjectReference Include="..\AElf.Blockchains.Single\AElf.Blockchains.Single.csproj" />
     </ItemGroup>
 
     <Target Name="CopyPackages" AfterTargets="AfterBuild">

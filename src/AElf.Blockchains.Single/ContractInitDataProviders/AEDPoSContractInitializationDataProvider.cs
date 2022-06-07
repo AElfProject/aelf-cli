@@ -2,29 +2,28 @@ using AElf.Kernel.Consensus.AEDPoS;
 using Microsoft.Extensions.Options;
 using Volo.Abp.DependencyInjection;
 
-namespace AElf.Blockchains.Single
+namespace AElf.Blockchains.Single;
+
+// ReSharper disable once InconsistentNaming
+public class AEDPoSContractInitializationDataProvider : IAEDPoSContractInitializationDataProvider,
+    ITransientDependency
 {
-    // ReSharper disable once InconsistentNaming
-    public class AEDPoSContractInitializationDataProvider : IAEDPoSContractInitializationDataProvider,
-        ITransientDependency
+    private readonly ConsensusOptions _consensusOptions;
+
+    public AEDPoSContractInitializationDataProvider(IOptionsSnapshot<ConsensusOptions> consensusOptions)
     {
-        private readonly ConsensusOptions _consensusOptions;
+        _consensusOptions = consensusOptions.Value;
+    }
 
-        public AEDPoSContractInitializationDataProvider(IOptionsSnapshot<ConsensusOptions> consensusOptions)
+    public AEDPoSContractInitializationData GetContractInitializationData()
+    {
+        return new AEDPoSContractInitializationData
         {
-            _consensusOptions = consensusOptions.Value;
-        }
-
-        public AEDPoSContractInitializationData GetContractInitializationData()
-        {
-            return new AEDPoSContractInitializationData
-            {
-                MiningInterval = _consensusOptions.MiningInterval,
-                PeriodSeconds = _consensusOptions.PeriodSeconds,
-                StartTimestamp = _consensusOptions.StartTimestamp,
-                InitialMinerList = _consensusOptions.InitialMinerList,
-                MinerIncreaseInterval = _consensusOptions.MinerIncreaseInterval
-            };
-        }
+            MiningInterval = _consensusOptions.MiningInterval,
+            PeriodSeconds = _consensusOptions.PeriodSeconds,
+            StartTimestamp = _consensusOptions.StartTimestamp,
+            InitialMinerList = _consensusOptions.InitialMinerList,
+            MinerIncreaseInterval = _consensusOptions.MinerIncreaseInterval
+        };
     }
 }

@@ -1,8 +1,7 @@
-namespace AElf.HDWallet.Core
+namespace AElf.HDWallet.Core;
+
+public interface IAccount<out TWallet> where TWallet : IWallet, new()
 {
-    public interface IAccount<out TWallet> where TWallet : IWallet, new()
-    {
-        TWallet GetInternalWallet(uint addressIndex);
-        TWallet GetExternalWallet(uint addressIndex);
-    }
+    TWallet GetInternalWallet(uint addressIndex);
+    TWallet GetExternalWallet(uint addressIndex);
 }

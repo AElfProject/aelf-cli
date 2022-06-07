@@ -1,5 +1,10 @@
 # AElf.Cli
 
+This tool is still working in process, please add this myget source if you occur problems with finding packages:
+```
+https://www.myget.org/F/aelf-project-dev/api/v3/index.json
+```
+
 ## How to install aelf command in local
 
 1. `cd` to the dir `src/AElf.Cli`, run `dotnet pack`

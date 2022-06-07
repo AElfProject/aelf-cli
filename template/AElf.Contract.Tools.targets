@@ -80,11 +80,11 @@
     <Target Name="PatchContractCode" Condition="'$(IsContract)' != '' AND '$(IsContract)'" AfterTargets="AfterBuild">
         <PropertyGroup>
             <CmdPatchOverwrite></CmdPatchOverwrite>
-            <CmdPatchOverwrite Condition="'$(PatchOverwrite)' != '' AND '$(PatchOverwrite)'">-w </CmdPatchOverwrite>
+            <CmdPatchOverwrite Condition="'$(PatchOverwrite)' != '' AND '$(PatchOverwrite)'">-w</CmdPatchOverwrite>
             <CmdSkipAudit></CmdSkipAudit>
-            <CmdSkipAudit Condition="'$(SkipAudit)' != '' AND '$(SkipAudit)'">-s </CmdSkipAudit>
+            <CmdSkipAudit Condition="'$(SkipAudit)' != '' AND '$(SkipAudit)'">-s</CmdSkipAudit>
             <CmdTreatAsSystemContract></CmdTreatAsSystemContract>
-            <CmdTreatAsSystemContract Condition="'$(IsSystemContract)' != '' AND '$(IsSystemContract)'">-t </CmdTreatAsSystemContract>
+            <CmdTreatAsSystemContract Condition="'$(IsSystemContract)' != '' AND '$(IsSystemContract)'">-t</CmdTreatAsSystemContract>
         </PropertyGroup>
         <Exec WorkingDirectory="$(PatcherDir)"
               Command="dotnet $(PatcherProjectName).dll $(CmdPatchOverwrite)$(CmdSkipAudit)$(CmdTreatAsSystemContract)-p $(TargetDir)$(TargetName).dll"

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using AElf.Types;
 using Newtonsoft.Json;
@@ -10,6 +11,7 @@ public interface ITokenService
 {
     Task<string> CreateAsync(string symbol, string tokenName, long totalSupply, int decimals, string issuer,
         bool isBurnable, int issueChainId);
+
     Task<string> CrossChainCreateAsync(string symbol);
 }
 
@@ -36,7 +38,7 @@ public class TokenService : ITokenService, ITransientDependency
                 ["value"] = Address.FromBase58(issuer).Value.ToBase64()
             },
             ["isBurnable"] = isBurnable,
-            ["issueChainId"] = issueChainId,
+            ["issueChainId"] = issueChainId
         };
 
         return await _blockChainService.SendTransactionAsync(AElfCliConstants.TestMainChainTokenContractAddress,
@@ -46,6 +48,6 @@ public class TokenService : ITokenService, ITransientDependency
 
     public Task<string> CrossChainCreateAsync(string symbol)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }

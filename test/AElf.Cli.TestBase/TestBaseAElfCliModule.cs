@@ -17,11 +17,7 @@ public class TestBaseAElfModule : AbpModule
 
         context.Services.AddSingleton(testOutputHelperAccessor);
 
-        context.Services.AddLogging(o =>
-        {
-            o.AddXUnit(testOutputHelperAccessor);
-                 
-        });
+        context.Services.AddLogging(o => { o.AddXUnit(testOutputHelperAccessor); });
     }
 }
 
