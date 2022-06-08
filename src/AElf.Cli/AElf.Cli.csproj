@@ -21,11 +21,11 @@
         <PackageReference Include="Nethereum.KeyStore" Version="4.5.0" />
         <PackageReference Include="Nethereum.Web3" Version="4.5.0" />
 
-        <PackageReference Include="AElf.Types" Version="1.2.0-rc-19145" />
-        <PackageReference Include="AElf.Core" Version="1.2.0-rc-19145" />
-        <PackageReference Include="AElf.CSharp.Core" Version="1.2.0-rc-19145" />
+        <PackageReference Include="AElf.Types" Version="1.2.0" />
+        <PackageReference Include="AElf.Core" Version="1.2.0" />
+        <PackageReference Include="AElf.CSharp.Core" Version="1.2.0" />
 
-        <PackageReference Include="AElf.ContractDeployer" Version="1.2.0-rc-19145" />
+        <PackageReference Include="AElf.ContractDeployer" Version="1.2.0" />
         <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="5.2.2" />
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
 
@@ -34,11 +34,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.2.0-rc-19145">
+        <PackageReference Include="AElf.WebApp.Application.Chain" Version="1.2.0">
             <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.chain</PackageName>
         </PackageReference>
-        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.2.0-rc-19145">
+        <PackageReference Include="AElf.WebApp.Application.Net" Version="1.2.0">
             <CopyToOutputDirectory>lib\netcoreapp3.1\*.xml</CopyToOutputDirectory>
             <PackageName>aelf.webapp.application.net</PackageName>
         </PackageReference>
@@ -82,6 +82,10 @@
     <ItemGroup>
         <ProjectReference Include="..\AElf.BIP39\AElf.BIP39.csproj" />
         <ProjectReference Include="..\AElf.Blockchains.Single\AElf.Blockchains.Single.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Logs" />
     </ItemGroup>
 
     <Target Name="CopyPackages" AfterTargets="AfterBuild">

@@ -8,16 +8,16 @@ public class ChainCommand : IAElfCommand
 {
     public Task ExecuteAsync(CommandLineArgs commandLineArgs)
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 
     public string GetUsageInfo()
     {
-        throw new NotImplementedException();
+        return "Not implemented yet.";
     }
 
     public string GetShortDescription()
     {
-        throw new NotImplementedException();
+        return "Not implemented yet.";
     }
 }

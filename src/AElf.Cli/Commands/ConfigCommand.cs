@@ -34,15 +34,16 @@ public class ConfigCommand : IAElfCommand, ITransientDependency
                 Environment.NewLine + Environment.NewLine +
                 GetUsageInfo()
             );
-        switch (commandLineArgs.Target.Trim().ToLower())
+        switch (commandLineArgs.Target!.Trim().ToLower())
         {
             case "list":
                 var configs = _configService.GetList();
-                foreach (var config in configs) Logger.LogInformation($"{config.Key}: {config.Value}");
+                foreach (var config in configs)
+                    Logger.LogInformation("{Key}: {Value}", config.Key, config.Value);
                 break;
             case "get":
                 value = _configService.Get(key);
-                Logger.LogInformation($"{key}: {value}");
+                Logger.LogInformation("{Key}: {Value}", key, value);
                 break;
             case "set":
                 var getResult = _configService.Set(key, value);
