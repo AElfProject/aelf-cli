@@ -3,6 +3,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using AElf.Cli.Args;
+using AElf.Cli.Args.Validation.CommandValitators;
+using AElf.Cli.Building.Project;
+using AElf.Cli.Building.Template;
 using AElf.Cli.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -26,20 +29,18 @@ public class NewCommand : IAElfCommand, ITransientDependency
 
     public Task ExecuteAsync(CommandLineArgs commandLineArgs)
     {
-        if (commandLineArgs.Target.IsNullOrWhiteSpace())
-            throw new AElfCliUsageException(
-                "Project name is missing!" +
-                Environment.NewLine + Environment.NewLine +
-                GetUsageInfo()
-            );
+        NewCommandValidator.Validate(commandLineArgs, GetUsageInfo());
 
-        var outputFolder = commandLineArgs.Options.GetOrNull(Options.OutputFolder.Short, Options.OutputFolder.Long);
-        outputFolder = outputFolder.IsNullOrWhiteSpace() ? Directory.GetCurrentDirectory() : outputFolder;
+        var newCommandArgs = new NewCommandArgs(commandLineArgs);
 
-        _generatingService.Generate(commandLineArgs.Target, outputFolder);
+        var templateBuilder = new TemplateBuilder(newCommandArgs);
+        var templateBuildResult = templateBuilder.Build();
 
+        var projectBuilder = new ProjectBuilder(templateBuildResult, newCommandArgs); 
+        projectBuilder.Build();
+        
         Logger.LogInformation("Created successfully!");
-        Logger.LogInformation($"Directory: {Path.GetFullPath(outputFolder)}");
+        Logger.LogInformation("Directory: ${FullPath}", Path.GetFullPath(newCommandArgs.OutputFolder));
         return Task.CompletedTask;
     }
 
@@ -73,12 +74,31 @@ public class NewCommand : IAElfCommand, ITransientDependency
         return "Generates a new contract development solution based on the AElf Boilerplate templates.";
     }
 
-    public static class Options
+    public static class NewCommandOptions
     {
         public static class OutputFolder
         {
             public const string Short = "o";
             public const string Long = "output-folder";
+        }
+    }
+
+    public class NewCommandArgs
+    {
+        public string Version { get; }
+        public string ProjectName { get; }
+        public string TemplateName { get; }
+        public string OutputFolder { get; }
+
+        public NewCommandArgs(CommandLineArgs args)
+        {
+            ProjectName = args.Target;
+            
+            var outputFolder = args.Options.GetOrNull(NewCommandOptions.OutputFolder.Short, NewCommandOptions.OutputFolder.Long);
+            OutputFolder = outputFolder.IsNullOrWhiteSpace() ? Directory.GetCurrentDirectory() : outputFolder;
+
+            Version = "latest";
+            TemplateName = "app";
         }
     }
 }

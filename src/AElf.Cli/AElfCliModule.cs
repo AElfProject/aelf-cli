@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 using AElf.BIP39;
 using AElf.Cli.Commands;
 using AElf.Client.Abp;
@@ -17,6 +18,9 @@ public class AElfCliModule : AbpModule
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         CultureInfo.CurrentCulture = new CultureInfo("en-US", false);
+        
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        
         Configure<AElfCliOptions>(options =>
         {
             options.Commands[HelpCommand.Name] = typeof(HelpCommand);
