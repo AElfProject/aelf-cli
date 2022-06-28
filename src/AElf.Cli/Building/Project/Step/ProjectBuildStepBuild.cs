@@ -6,6 +6,6 @@ public class ProjectBuildStepBuild: IProjectBuildStep
 {
     public void Execute(ProjectBuildContext context)
     {
-        CmdHelper.RunCmd("dotnet build", context.OutputFolder);
+        CmdHelper.RunCmd("dotnet build /graphbuild", context.OutputFolder);
     }
 }
