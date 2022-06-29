@@ -3,99 +3,85 @@ using System.Collections.Generic;
 using System.Linq;
 using Volo.Abp.DependencyInjection;
 
-namespace AElf.Cli.Args
+namespace AElf.Cli.Args;
+
+public interface ICommandLineArgumentParser
 {
-    public interface ICommandLineArgumentParser
-    {
-        CommandLineArgs Parse(string[] args);
-    }
+    CommandLineArgs Parse(string[] args);
+}
 
-    public class CommandLineArgumentParser : ICommandLineArgumentParser, ITransientDependency
+public class CommandLineArgumentParser : ICommandLineArgumentParser, ITransientDependency
+{
+    public CommandLineArgs Parse(string[] args)
     {
-        public CommandLineArgs Parse(string[] args)
+        if (args.IsNullOrEmpty()) return CommandLineArgs.Empty();
+
+        var argumentList = args.ToList();
+
+        // Command
+        var command = argumentList[0];
+        argumentList.RemoveAt(0);
+
+        if (!argumentList.Any())
+            return new CommandLineArgs(command);
+
+        // Target
+        var target = argumentList[0];
+        if (target.StartsWith("-"))
+            target = null;
+        else
+            argumentList.RemoveAt(0);
+
+        if (!argumentList.Any())
+            return new CommandLineArgs(command, target);
+
+        // Options
+        var commandLineArgs = new CommandLineArgs(command, target);
+        while (argumentList.Any())
         {
-            if (args.IsNullOrEmpty())
-            {
-                return CommandLineArgs.Empty();
-            }
-
-            var argumentList = args.ToList();
-
-            // Command
-            var command = argumentList[0];
+            var optionName = ParseOptionName(argumentList[0]);
             argumentList.RemoveAt(0);
 
             if (!argumentList.Any())
-                return new CommandLineArgs(command);
-
-            // Target
-            var target = argumentList[0];
-            if (target.StartsWith("-"))
             {
-                target = null;
-            }
-            else
-            {
-                argumentList.RemoveAt(0);
+                commandLineArgs.Options[optionName] = null;
+                break;
             }
 
-            if (!argumentList.Any())
-                return new CommandLineArgs(command, target);
-
-            // Options
-            var commandLineArgs = new CommandLineArgs(command, target);
-            while (argumentList.Any())
+            if (IsOptionName(argumentList[0]))
             {
-                var optionName = ParseOptionName(argumentList[0]);
-                argumentList.RemoveAt(0);
-
-                if (!argumentList.Any())
-                {
-                    commandLineArgs.Options[optionName] = null;
-                    break;
-                }
-
-                if (IsOptionName(argumentList[0]))
-                {
-                    commandLineArgs.Options[optionName] = null;
-                    continue;
-                }
-
-                commandLineArgs.Options[optionName] = argumentList[0];
-                argumentList.RemoveAt(0);
+                commandLineArgs.Options[optionName] = null;
+                continue;
             }
 
-            return commandLineArgs;
+            commandLineArgs.Options[optionName] = argumentList[0];
+            argumentList.RemoveAt(0);
         }
 
-        private static bool IsOptionName(string argument)
+        return commandLineArgs;
+    }
+
+    private static bool IsOptionName(string argument)
+    {
+        return argument.StartsWith("-") || argument.StartsWith("--");
+    }
+
+    private static string ParseOptionName(string argument)
+    {
+        if (argument.StartsWith("--"))
         {
-            return argument.StartsWith("-") || argument.StartsWith("--");
+            if (argument.Length <= 2) throw new ArgumentException("Should specify an option name after '--' prefix!");
+
+            return argument.RemovePreFix("--");
         }
 
-        private static string ParseOptionName(string argument)
+        if (argument.StartsWith("-"))
         {
-            if (argument.StartsWith("--"))
-            {
-                if (argument.Length <= 2)
-                {
-                    throw new ArgumentException("Should specify an option name after '--' prefix!");
-                }
+            if (argument.Length <= 1) throw new ArgumentException("Should specify an option name after '--' prefix!");
 
-                return argument.RemovePreFix("--");
-            }
-
-            if (argument.StartsWith("-"))
-            {
-                if (argument.Length <= 1)
-                {
-                    throw new ArgumentException("Should specify an option name after '--' prefix!");
-                }
-
-                return argument.RemovePreFix("-");
-            }
-
-            throw new ArgumentException("Option names should start with '-' or '--'.");
+            return argument.RemovePreFix("-");
         }
+
+        throw new ArgumentException("Option names should start with '-' or '--'.");
     }
 }

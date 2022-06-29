@@ -17,7 +17,7 @@ public abstract class GeneratorBase<T>
 
     public T[] TestObjectNTimes(int n)
     {
-        T testObject = TestObject;
+        var testObject = TestObject;
         return Enumerable.Repeat(testObject, n).ToArray();
     }
 

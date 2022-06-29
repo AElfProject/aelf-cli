@@ -1,12 +1,11 @@
 using AElf.Kernel.Token;
 
-namespace AElf.Blockchains.Single
+namespace AElf.Blockchains.Single;
+
+public class TokenContractInitializationDataProvider : ITokenContractInitializationDataProvider
 {
-    public class TokenContractInitializationDataProvider : ITokenContractInitializationDataProvider
+    public TokenContractInitializationData GetContractInitializationData()
     {
-        public TokenContractInitializationData GetContractInitializationData()
-        {
-            return null;
-        }
+        return null;
     }
 }

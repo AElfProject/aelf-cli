@@ -1,33 +1,29 @@
-using AElf.Client.Service;
+using AElf.Client;
 using Volo.Abp.DependencyInjection;
 
-namespace AElf.Cli.Services
+namespace AElf.Cli.Services;
+
+public class AElfClientFactory : ISingletonDependency
 {
-    public class AElfClientFactory : ISingletonDependency
+    private readonly IUserContext _userContext;
+    private AElfClient _client;
+
+    public AElfClientFactory(IUserContext userContext)
     {
-        private AElfClient _client;
-        private readonly IUserContext _userContext;
+        _userContext = userContext;
+    }
 
-        public AElfClientFactory(IUserContext userContext)
+    public AElfClient CreateClient(string endpoint = null)
+    {
+        if (endpoint == null)
         {
-            _userContext = userContext;
+            if (_client == null) _client = new AElfClient(_userContext.Endpoint);
+        }
+        else
+        {
+            _client = new AElfClient(endpoint);
         }
 
-        public AElfClient CreateClient(string endpoint = null)
-        {
-            if (endpoint == null)
-            {
-                if (_client == null)
-                {
-                    _client = new AElfClient(_userContext.Endpoint);
-                }
-            }
-            else
-            {
-                _client = new AElfClient(endpoint);
-            }
-
-            return _client;
-        }
+        return _client;
     }
 }

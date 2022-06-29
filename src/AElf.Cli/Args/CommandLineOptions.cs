@@ -3,34 +3,25 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using Volo.Abp;
 
-namespace AElf.Cli.Args
+namespace AElf.Cli.Args;
+
+public class CommandLineOptions : Dictionary<string, string>
 {
-    public class CommandLineOptions : Dictionary<string, string>
+    [CanBeNull]
+    public string GetOrNull([NotNull] string name, params string[] alternativeNames)
     {
-        [CanBeNull]
-        public string GetOrNull([NotNull] string name, params string[] alternativeNames)
-        {
-            Check.NotNullOrWhiteSpace(name, nameof(name));
+        Check.NotNullOrWhiteSpace(name, nameof(name));
 
-            var value = this.GetOrDefault(name);
-            if (!value.IsNullOrWhiteSpace())
+        var value = this.GetOrDefault(name);
+        if (!value.IsNullOrWhiteSpace()) return value;
+
+        if (!alternativeNames.IsNullOrEmpty())
+            foreach (var alternativeName in alternativeNames)
             {
-                return value;
+                value = this.GetOrDefault(alternativeName);
+                if (!value.IsNullOrWhiteSpace()) return value;
             }
 
-            if (!alternativeNames.IsNullOrEmpty())
-            {
-                foreach (var alternativeName in alternativeNames)
-                {
-                    value = this.GetOrDefault(alternativeName);
-                    if (!value.IsNullOrWhiteSpace())
-                    {
-                        return value;
-                    }
-                }
-            }
-
-            return null;
-        }
+        return null;
     }
 }

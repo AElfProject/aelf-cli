@@ -1,15 +1,14 @@
 using AElf.Types;
 
-namespace AElf.HDWallet.Core
+namespace AElf.HDWallet.Core;
+
+public interface IWallet
 {
-    public interface IWallet
-    {
-        Address Address { get; }
+    Address Address { get; }
 
-        byte[] Sign(byte[] message);
+    public byte[] PrivateKey { get; set; }
 
-        public byte[] PrivateKey { get; set; }
+    public uint Index { get; set; }
 
-        public uint Index { get; set; }
-    }
+    byte[] Sign(byte[] message);
 }

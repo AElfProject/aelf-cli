@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using AElf.Blockchains.BasicBaseChain;
+﻿using AElf.Blockchains.BasicBaseChain;
 using AElf.Database;
 using AElf.Kernel.Infrastructure;
 using AElf.Kernel.SmartContract;
@@ -12,31 +10,30 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Volo.Abp.Modularity;
 
-namespace AElf.Blockchains.Single
+namespace AElf.Blockchains.Single;
+
+[DependsOn(
+    typeof(BasicBaseChainAElfModule)
+)]
+public class SingleNodeChainAElfModule : AElfModule
 {
-    [DependsOn(
-        typeof(BasicBaseChainAElfModule)
-    )]
-    public class SingleNodeChainAElfModule : AElfModule
+    public SingleNodeChainAElfModule()
     {
-        public ILogger<SingleNodeChainAElfModule> Logger { get; set; }
+        Logger = NullLogger<SingleNodeChainAElfModule>.Instance;
+    }
 
-        public SingleNodeChainAElfModule()
-        {
-            Logger = NullLogger<SingleNodeChainAElfModule>.Instance;
-        }
+    public ILogger<SingleNodeChainAElfModule> Logger { get; set; }
 
-        public override void ConfigureServices(ServiceConfigurationContext context)
-        {
-            var services = context.Services;
-            services.AddTransient<IContractDeploymentListProvider, SingleNodeChainContractDeploymentListProvider>();
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        var services = context.Services;
+        services.AddTransient<IContractDeploymentListProvider, SingleNodeChainContractDeploymentListProvider>();
 
-            services.AddKeyValueDbContext<BlockchainKeyValueDbContext>(p => p.UseInMemoryDatabase());
-            services.AddKeyValueDbContext<StateKeyValueDbContext>(p => p.UseInMemoryDatabase());
+        services.AddKeyValueDbContext<BlockchainKeyValueDbContext>(p => p.UseInMemoryDatabase());
+        services.AddKeyValueDbContext<StateKeyValueDbContext>(p => p.UseInMemoryDatabase());
 
-            Configure<ContractOptions>(o => o.ContractDeploymentAuthorityRequired = false);
+        Configure<ContractOptions>(o => o.ContractDeploymentAuthorityRequired = false);
 
-            services.AddSingleton<INodeEnvironmentProvider, CliNodeEnvironmentProvider>();
-        }
+        services.AddSingleton<INodeEnvironmentProvider, CliNodeEnvironmentProvider>();
     }
 }

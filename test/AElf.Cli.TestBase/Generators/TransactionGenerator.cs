@@ -1,6 +1,5 @@
 using AElf.Cli.Services;
 using AElf.Client.Dto;
-using AElf.Types;
 using Volo.Abp.Threading;
 
 namespace AElf.Cli.TestBase.Generators;
@@ -44,10 +43,5 @@ public class TransactionGenerator<T> : GeneratorBase<T> where T : TransactionDto
     {
         TestObjectInternal.MethodName = methodName;
         return this;
-    }
-    
-    protected override void BeforeReturn()
-    {
-        base.BeforeReturn();
     }
 }

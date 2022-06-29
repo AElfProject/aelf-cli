@@ -1,13 +1,11 @@
 using Volo.Abp.Autofac;
 using Volo.Abp.Modularity;
 
-namespace AElf.BIP39
+namespace AElf.BIP39;
+
+[DependsOn(
+    typeof(AbpAutofacModule)
+)]
+public class Bip39Module : AbpModule
 {
-    [DependsOn(
-        typeof(AbpAutofacModule)
-    )]
-    public class Bip39Module : AbpModule
-    {
-        
-    }
 }

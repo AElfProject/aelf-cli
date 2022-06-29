@@ -12,12 +12,10 @@ namespace AElf.Cli.Commands;
 public class CreateTokenCommand : IAElfCommand, ITransientDependency
 {
     public const string Name = "token";
+    private readonly IBlockChainService _blockChainService;
 
     private readonly ITokenService _tokenService;
-    private readonly IBlockChainService _blockChainService;
     private readonly IUserContext _userContext;
-    
-    public ILogger<CreateTokenCommand> Logger { get; set; }
 
     public CreateTokenCommand(ITokenService tokenService, IBlockChainService blockChainService,
         IUserContext userContext)
@@ -25,9 +23,11 @@ public class CreateTokenCommand : IAElfCommand, ITransientDependency
         _tokenService = tokenService;
         _blockChainService = blockChainService;
         _userContext = userContext;
-        
+
         Logger = NullLogger<CreateTokenCommand>.Instance;
     }
+
+    public ILogger<CreateTokenCommand> Logger { get; set; }
 
     public async Task ExecuteAsync(CommandLineArgs commandLineArgs)
     {

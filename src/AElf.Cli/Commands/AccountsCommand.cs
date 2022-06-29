@@ -8,60 +8,57 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Volo.Abp.DependencyInjection;
 
-namespace AElf.Cli.Commands
+namespace AElf.Cli.Commands;
+
+public class AccountsCommand : IAElfCommand, ITransientDependency
 {
-    public class AccountsCommand : IAElfCommand, ITransientDependency
+    public const string Name = "accounts";
+
+    private readonly IAccountsService _accountsService;
+
+    public AccountsCommand(IAccountsService accountsService, IServiceScopeFactory serviceScopeFactory)
     {
-        public const string Name = "accounts";
+        _accountsService = accountsService;
+        ServiceScopeFactory = serviceScopeFactory;
+        Logger = NullLogger<AccountsCommand>.Instance;
+    }
 
-        private readonly IAccountsService _accountsService;
+    protected IServiceScopeFactory ServiceScopeFactory { get; }
 
-        protected IServiceScopeFactory ServiceScopeFactory { get; }
+    public ILogger<AccountsCommand> Logger { get; set; }
 
-        public ILogger<AccountsCommand> Logger { get; set; }
+    public Task ExecuteAsync(CommandLineArgs commandLineArgs)
+    {
+        if (commandLineArgs.Options.ContainsKey(Options.List.Short) ||
+            commandLineArgs.Options.ContainsKey(Options.List.Long))
+            Logger.LogInformation(_accountsService.GetLocalAccount().Aggregate("\n", (l, r) => $"{l}\n{r}"));
 
-        public AccountsCommand(IAccountsService accountsService, IServiceScopeFactory serviceScopeFactory)
+        return Task.CompletedTask;
+    }
+
+    public string GetUsageInfo()
+    {
+        var sb = new StringBuilder();
+
+        sb.AppendLine("");
+        sb.AppendLine(
+            "'account' command is used to manage your accounts (keys) that you can use to interact with AElf blockchains.");
+        sb.AppendLine("See the documentation for more info: https://docs.aelf.io");
+
+        return sb.ToString();
+    }
+
+    public string GetShortDescription()
+    {
+        return "Manage local aelf blockchain accounts.";
+    }
+
+    private static class Options
+    {
+        public static class List
         {
-            _accountsService = accountsService;
-            ServiceScopeFactory = serviceScopeFactory;
-            Logger = NullLogger<AccountsCommand>.Instance;
-        }
-
-        public Task ExecuteAsync(CommandLineArgs commandLineArgs)
-        {
-            if (commandLineArgs.Options.ContainsKey(Options.List.Short) ||
-                commandLineArgs.Options.ContainsKey(Options.List.Long))
-            {
-                Logger.LogInformation(_accountsService.GetLocalAccount().Aggregate("\n", (l, r) => $"{l}\n{r}"));
-            }
-
-            return Task.CompletedTask;
-        }
-
-        public string GetUsageInfo()
-        {
-            var sb = new StringBuilder();
-
-            sb.AppendLine("");
-            sb.AppendLine(
-                "'account' command is used to manage your accounts (keys) that you can use to interact with AElf blockchains.");
-            sb.AppendLine("See the documentation for more info: https://docs.aelf.io");
-
-            return sb.ToString();
-        }
-
-        public string GetShortDescription()
-        {
-            return "Manage local aelf blockchain accounts.";
-        }
-
-        private static class Options
-        {
-            public static class List
-            {
-                public const string Short = "l";
-                public const string Long = "list";
-            }
+            public const string Short = "l";
+            public const string Long = "list";
         }
     }
 }

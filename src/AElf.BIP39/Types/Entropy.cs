@@ -1,24 +1,22 @@
-namespace AElf.BIP39.Types
+namespace AElf.BIP39.Types;
+
+public class Entropy
 {
-    public class Entropy
+    public Entropy()
     {
-        public string Hex { get; set; }
-        public BipWordlistLanguage Language { get; set; }
+    }
 
-        public Entropy()
-        {
-            
-        }
+    public Entropy(string hex, BipWordlistLanguage language = BipWordlistLanguage.English)
+    {
+        Hex = hex;
+        Language = language;
+    }
 
-        public Entropy(string hex, BipWordlistLanguage language = BipWordlistLanguage.English)
-        {
-            Hex = hex;
-            Language = language;
-        }
+    public string Hex { get; set; }
+    public BipWordlistLanguage Language { get; set; }
 
-        public override string ToString()
-        {
-            return Hex;
-        }
+    public override string ToString()
+    {
+        return Hex;
     }
 }

@@ -1,5 +1,10 @@
 # AElf.Cli
 
+本工具尚处于开发阶段，如果遇到无法找到依赖包的错误，请手动添加一下myget的源：
+```
+https://www.myget.org/F/aelf-project-dev/api/v3/index.json
+```
+
 ## 通过本地代码安装aelf命令
 
 1. cd到src/AElf.Cli目录下，执行`dotnet pack`
