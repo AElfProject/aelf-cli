@@ -8,7 +8,6 @@ public static class AElfCliHttpAddresses
     
     public static string TemplateDownloadUrl(string templateName, string version)
     {
-        //DEBUG: http://localhost:8080/templates/app/latest.zip
         return $"{TemplateRootAddress}/{templateName}/{version}.zip";
     }
 }

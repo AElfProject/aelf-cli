@@ -26,7 +26,6 @@ public class TemplateBuilder
 
     private IEnumerable<ITemplateBuildStep> BuildPipeline()
     {
-        //根据不同的template name和参数构建不同的pipeline
         var pipelines = new List<ITemplateBuildStep>
         {
             new TemplateBuildStepDownloadOrReadCachedTemplateFilesZip(),
