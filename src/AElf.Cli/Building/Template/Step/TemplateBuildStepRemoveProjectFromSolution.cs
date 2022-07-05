@@ -37,25 +37,6 @@ public class TemplateBuildStepRemoveProjectFromSolution:ITemplateBuildStep
         var solutionFile = context.GetFile(_solutionFilePath);
         solutionFile.NormalizeLineEndings();
         solutionFile.SetLines(RemoveProject(solutionFile.GetLines().ToList()));
-
-        RemoveProjectFromAbpmdlFile(context);
-    }
-
-    private void RemoveProjectFromAbpmdlFile(TemplateBuildContext context)
-    {
-        var abpmdlFile = context.FindFile(_solutionFilePath.RemovePostFix(".sln") + ".abpmdl.json");
-
-        if (abpmdlFile == null)
-        {
-            return;
-        }
-
-        var jsonRoot = JObject.Parse(abpmdlFile.Content);
-        var packagesObj = (JObject)jsonRoot["packages"];
-
-        packagesObj?.Remove(_projectName);
-
-        abpmdlFile.SetContent(jsonRoot.ToString(Formatting.Indented));
     }
 
     private List<string> RemoveProject(List<string> solutionFileLines)
@@ -108,8 +89,8 @@ public class TemplateBuildStepRemoveProjectFromSolution:ITemplateBuildStep
     {
         if (_solutionFilePath == null)
         {
-            _solutionFilePath = context.FindFile("/aspnet-core/AElf.Common.sln")?.Name ??
-                                context.FindFile("/AElf.Common.sln")?.Name;
+            _solutionFilePath = context.FindFile("/aspnet-core/NFTMarketServer.sln")?.Name ??
+                                context.FindFile("/NFTMarketServer.sln")?.Name;
         }
         if (_projectFolderPath == null)
         {

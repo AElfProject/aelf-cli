@@ -30,12 +30,12 @@ public class TemplateBuilder
         {
             new TemplateBuildStepDownloadOrReadCachedTemplateFilesZip(),
             new TemplateBuildStepReadFileEntryList(),
-            new TemplateBuildStepRemoveProjectFromSolution(
-                "AElf.Common.Web.Tests"
-            ),
-            new TemplateBuildStepRemoveProjectFromSolution(
-                "AElf.Common.Web"
-            ),
+            //new TemplateBuildStepRemoveProjectFromSolution(
+            //    "AElf.Common.Web.Tests"
+            //),
+            //new TemplateBuildStepRemoveProjectFromSolution(
+            //    "AElf.Common.Web"
+            //),
             new TemplateBuildStepChangeProjectName(TemplateBuildContext.OriginalProjectName, _args.ProjectName),
             new TemplateBuildStepCreateProjectResultZip(),
         };
