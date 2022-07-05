@@ -36,15 +36,22 @@ public class NewCommandValidator
             if (NewCommand.NewCommandOptions.OutputFolder.Short.Equals(option.Key, StringComparison.CurrentCultureIgnoreCase)
                 || NewCommand.NewCommandOptions.OutputFolder.Long.Equals(option.Key, StringComparison.CurrentCultureIgnoreCase))
             {
-                //检查option value的合法性
                 if (string.IsNullOrWhiteSpace(option.Value))
                 {
-                    error.AppendLine($"\tplease give a value for option: -${option.Key}");
+                    error.AppendLine($"\tplease give a value for option: -{option.Key}");
+                }
+            }
+            else if (NewCommand.NewCommandOptions.TemplateVersion.Short.Equals(option.Key, StringComparison.CurrentCultureIgnoreCase)
+                || NewCommand.NewCommandOptions.TemplateVersion.Long.Equals(option.Key, StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (string.IsNullOrWhiteSpace(option.Value))
+                {
+                    error.AppendLine($"\tplease give a value for option: -{option.Key}");
                 }
             }
             else
             {
-                error.AppendLine($"\toption -${option.Key} is not valid for New Command!");
+                error.AppendLine($"\toption -{option.Key} is not valid for New Command!");
             }
         }
 

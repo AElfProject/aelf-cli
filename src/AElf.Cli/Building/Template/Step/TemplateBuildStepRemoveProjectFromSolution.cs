@@ -109,13 +109,13 @@ public class TemplateBuildStepRemoveProjectFromSolution:ITemplateBuildStep
         if (_solutionFilePath == null)
         {
             _solutionFilePath = context.FindFile("/aspnet-core/AElf.Common.sln")?.Name ??
-                                context.FindFile("/AElf.Common.sln")?.Name ??
-                                context.FindFile("/AElf.Common.MicroserviceName.sln")?.Name;
+                                context.FindFile("/AElf.Common.sln")?.Name;
         }
         if (_projectFolderPath == null)
         {
             _projectFolderPath = context.FindFile("/aspnet-core/src/" + _projectName.EnsureEndsWith('/'))?.Name ??
                                  context.FindFile("/src/" + _projectName.EnsureEndsWith('/'))?.Name ??
+                                 context.FindFile("/test/" + _projectName.EnsureEndsWith('/'))?.Name ??
                                  context.FindFile("/aspnet-core/" + _projectName.EnsureEndsWith('/'))?.Name;
         }
     }

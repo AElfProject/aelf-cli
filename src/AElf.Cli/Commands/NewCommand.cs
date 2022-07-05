@@ -81,6 +81,12 @@ public class NewCommand : IAElfCommand, ITransientDependency
             public const string Short = "o";
             public const string Long = "output-folder";
         }
+        
+        public static class TemplateVersion
+        {
+            public const string Short = "tv";
+            public const string Long = "template-version";
+        }
     }
 
     public class NewCommandArgs
@@ -96,8 +102,10 @@ public class NewCommand : IAElfCommand, ITransientDependency
             
             var outputFolder = args.Options.GetOrNull(NewCommandOptions.OutputFolder.Short, NewCommandOptions.OutputFolder.Long);
             OutputFolder = outputFolder.IsNullOrWhiteSpace() ? Directory.GetCurrentDirectory() : outputFolder;
+            
+            var templateVersion = args.Options.GetOrNull(NewCommandOptions.TemplateVersion.Short, NewCommandOptions.TemplateVersion.Long);
+            Version = templateVersion.IsNullOrWhiteSpace() ? "latest" : templateVersion;
 
-            Version = "latest";
             TemplateName = "app";
         }
     }
