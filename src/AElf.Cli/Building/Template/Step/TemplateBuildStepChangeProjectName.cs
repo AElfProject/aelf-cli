@@ -6,7 +6,6 @@ namespace AElf.Cli.Building.Template.Step;
 public class TemplateBuildStepChangeProjectName: ITemplateBuildStep
 {
     private readonly string _oldProjectName;
-    
     private readonly string _newProjectName;
 
     public TemplateBuildStepChangeProjectName(

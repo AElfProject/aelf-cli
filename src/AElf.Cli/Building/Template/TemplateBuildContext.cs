@@ -7,7 +7,9 @@ namespace AElf.Cli.Building.Template;
 
 public class TemplateBuildContext
 {
-    public static string OriginalProjectName => "AElf.Common";
+    public static string OriginalFullName => "CompanyName.ProjectName";
+    public static string OriginalCompanyName => "CompanyName";
+    public static string OriginalProjectName => "ProjectName";
     
     public string DownloadUrl { get; }
 

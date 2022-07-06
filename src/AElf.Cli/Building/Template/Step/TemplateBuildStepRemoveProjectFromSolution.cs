@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace AElf.Cli.Building.Template.Step;
 
@@ -89,8 +87,8 @@ public class TemplateBuildStepRemoveProjectFromSolution:ITemplateBuildStep
     {
         if (_solutionFilePath == null)
         {
-            _solutionFilePath = context.FindFile("/aspnet-core/AElf.Common.sln")?.Name ??
-                                context.FindFile("/AElf.Common.sln")?.Name;
+            _solutionFilePath = context.FindFile("/aspnet-core/CompanyName.ProjectName.sln")?.Name ??
+                                context.FindFile("/CompanyName.ProjectName.sln")?.Name;
         }
         if (_projectFolderPath == null)
         {

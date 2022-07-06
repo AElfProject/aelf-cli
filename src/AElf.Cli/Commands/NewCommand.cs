@@ -92,14 +92,25 @@ public class NewCommand : IAElfCommand, ITransientDependency
     public class NewCommandArgs
     {
         public string Version { get; }
+        public string FullName { get; }
+        public string CompanyName { get; }
         public string ProjectName { get; }
         public string TemplateName { get; }
         public string OutputFolder { get; }
 
         public NewCommandArgs(CommandLineArgs args)
         {
-            ProjectName = args.Target;
-            
+            FullName = args.Target;
+
+            ProjectName = FullName;
+
+            if (FullName != null && FullName.Contains('.'))
+            {
+                var lastDotIndex = FullName.LastIndexOf(".", StringComparison.OrdinalIgnoreCase);
+                CompanyName = FullName[..lastDotIndex];
+                ProjectName = FullName[(lastDotIndex + 1)..];
+            }
+
             var outputFolder = args.Options.GetOrNull(NewCommandOptions.OutputFolder.Short, NewCommandOptions.OutputFolder.Long);
             OutputFolder = outputFolder.IsNullOrWhiteSpace() ? Directory.GetCurrentDirectory() : outputFolder;
             

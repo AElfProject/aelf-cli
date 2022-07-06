@@ -31,12 +31,17 @@ public class TemplateBuilder
             new TemplateBuildStepDownloadOrReadCachedTemplateFilesZip(),
             new TemplateBuildStepReadFileEntryList(),
             //new TemplateBuildStepRemoveProjectFromSolution(
-            //    "AElf.Common.Web.Tests"
+            //    "CompanyName.ProjectName.Web.Tests"
             //),
             //new TemplateBuildStepRemoveProjectFromSolution(
-            //    "AElf.Common.Web"
+            //    "CompanyName.ProjectName.Web"
             //),
-            new TemplateBuildStepChangeProjectName(TemplateBuildContext.OriginalProjectName, _args.ProjectName),
+            //new TemplateBuildStepChangeProjectName(TemplateBuildContext.OriginalFullName, _args.FullName),
+            new TemplateBuildStepChangeSolutionName(
+                TemplateBuildContext.OriginalCompanyName, 
+                TemplateBuildContext.OriginalProjectName, 
+                _args.CompanyName, 
+                _args.ProjectName),
             new TemplateBuildStepCreateProjectResultZip(),
         };
 
