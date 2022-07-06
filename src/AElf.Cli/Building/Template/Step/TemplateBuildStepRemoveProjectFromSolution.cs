@@ -89,8 +89,8 @@ public class TemplateBuildStepRemoveProjectFromSolution:ITemplateBuildStep
     {
         if (_solutionFilePath == null)
         {
-            _solutionFilePath = context.FindFile("/aspnet-core/NFTMarketServer.sln")?.Name ??
-                                context.FindFile("/NFTMarketServer.sln")?.Name;
+            _solutionFilePath = context.FindFile("/aspnet-core/AElf.Common.sln")?.Name ??
+                                context.FindFile("/AElf.Common.sln")?.Name;
         }
         if (_projectFolderPath == null)
         {
