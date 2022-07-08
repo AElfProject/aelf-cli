@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Volo.Abp.Core" Version="5.3.1" />
+        <PackageReference Include="Volo.Abp.ObjectMapping" Version="5.3.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CompanyName.ProjectName.Application\CompanyName.ProjectName.Application.csproj" />
+      <ProjectReference Include="..\CompanyName.ProjectName.EntityFrameworkCore\CompanyName.ProjectName.EntityFrameworkCore.csproj" />
+    </ItemGroup>
+</Project>

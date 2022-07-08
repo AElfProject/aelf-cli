@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package token;
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "AElf.Contracts.ProjectName";
+
+service ProjectNameContract {
+    // Action
+    rpc DemoAction (google.protobuf.Empty) returns (google.protobuf.Empty) {
+    }
+}
+
+message DemoEvent
+{
+    option (aelf.is_event) = true;
+    // The address who wants to burn token.
+    aelf.Address burner = 1 [(aelf.is_indexed) = true];
+    // The symbol of burned token. 
+    string symbol = 2 [(aelf.is_indexed) = true];
+    // The amount of burned token. 
+    int64 amount = 3;
+}

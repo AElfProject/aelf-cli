@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Serilog.AspNetCore" Version="4.0.0" />
+        <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
+        <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
+        <PackageReference Include="Volo.Abp.Autofac" Version="5.2.1" />
+        <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="5.3.1" />
+        <PackageReference Include="Volo.Abp.BlobStoring.Aliyun" Version="5.3.1" />
+        <PackageReference Include="Volo.Abp.Caching.StackExchangeRedis" Version="5.3.1" />
+        <PackageReference Include="Volo.Abp.EventBus.RabbitMQ" Version="5.3.1" />
+        <PackageReference Include="Volo.Abp.Swashbuckle" Version="5.3.1" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="appsettings.json">
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CompanyName.ProjectName.EntityFrameworkCore\CompanyName.ProjectName.EntityFrameworkCore.csproj" />
+      <ProjectReference Include="..\CompanyName.ProjectName.EntityHandler.Core\CompanyName.ProjectName.EntityHandler.Core.csproj" />
+      <ProjectReference Include="..\CompanyName.ProjectName.Worker\CompanyName.ProjectName.Worker.csproj" />
+    </ItemGroup>
+</Project>
