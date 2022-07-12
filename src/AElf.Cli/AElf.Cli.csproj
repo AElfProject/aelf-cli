@@ -82,6 +82,7 @@
     <ItemGroup>
         <ProjectReference Include="..\AElf.BIP39\AElf.BIP39.csproj" />
         <ProjectReference Include="..\AElf.Blockchains.Single\AElf.Blockchains.Single.csproj" />
+        <ProjectReference Include="..\AElf.Cli.Console.AnsiConsole\AElf.Cli.Console.AnsiConsole.csproj" />
         <ProjectReference Include="..\AElf.Cli.Core\AElf.Cli.Core.csproj" />
     </ItemGroup>
 

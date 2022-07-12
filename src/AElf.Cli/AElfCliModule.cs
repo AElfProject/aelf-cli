@@ -1,6 +1,7 @@
 using System.Globalization;
 using AElf.BIP39;
 using AElf.Cli.Commands;
+using AElf.Cli.Console.AnsiConsole;
 using AElf.Client.Abp;
 using Volo.Abp.Autofac;
 using Volo.Abp.Modularity;
@@ -10,7 +11,8 @@ namespace AElf.Cli;
 [DependsOn(
     typeof(AbpAutofacModule),
     typeof(Bip39Module),
-    typeof(AElfClientModule)
+    typeof(AElfClientModule),
+    typeof(AElfCliAnsiConsoleModule)
 )]
 public class AElfCliModule : AbpModule
 {

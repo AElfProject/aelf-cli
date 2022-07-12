@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Spectre.Console;
 
 namespace AElf.Cli;
 
@@ -37,7 +38,7 @@ public class Blockchain
         catch (Exception e)
         {
             if (logger == NullLogger<Blockchain>.Instance)
-                Console.WriteLine(e);
+                AnsiConsole.WriteLine(e.Message);
             logger.LogCritical(e, "program crashed");
         }
     }
