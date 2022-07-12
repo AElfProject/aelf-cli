@@ -5,7 +5,9 @@ namespace AElf.Cli;
 
 public class AElfCliConstants
 {
-    public const int AElfChainId = 9992731;
+    public const int MainChainId = 9992731;
+    public const int SideChainId1 = 1866392;
+    public const int SideChainId2 = 1931928;
     public const string EndpointConfigKey = "endpoint";
     public const string AccountConfigKey = "account";
     public const string PasswordConfigKey = "password";
@@ -27,4 +29,8 @@ public class AElfCliConstants
 
     public static string DataPath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "aelf");
+
+    public const string ChooseAMethod = "Choose a [blue]method.[/]";
+    public const int DefaultPageSize = 7;
+    public const string MoreMethods = "[grey](Move up and down to reveal more methods)[/]";
 }

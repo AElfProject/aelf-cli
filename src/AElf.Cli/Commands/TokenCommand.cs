@@ -1,10 +1,12 @@
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AElf.Cli.Args;
 using AElf.Cli.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Spectre.Console;
 using Volo.Abp.DependencyInjection;
 
 namespace AElf.Cli.Commands;
@@ -31,29 +33,58 @@ public class CreateTokenCommand : IAElfCommand, ITransientDependency
 
     public async Task ExecuteAsync(CommandLineArgs commandLineArgs)
     {
-        var symbol = commandLineArgs.Options.GetOrNull(Options.Symbol.Short, Options.Symbol.Long);
-        var tokenName = commandLineArgs.Options.GetOrNull(Options.TokenName.Short, Options.TokenName.Long);
-        var totalSupply = commandLineArgs.Options.GetOrNull(Options.TotalSupply.Short, Options.TotalSupply.Long);
-        var decimals = commandLineArgs.Options.GetOrNull(Options.Decimals.Short, Options.Decimals.Long);
-        var issuer = commandLineArgs.Options.GetOrNull(Options.Issuer.Short, Options.Issuer.Long);
-        var isBurnable = commandLineArgs.Options.GetOrNull(Options.IsBurnable.Short, Options.IsBurnable.Long);
-        var issuerChainId = commandLineArgs.Options.GetOrNull(Options.IssueChainId.Short, Options.IssueChainId.Long);
 
         var endpoint = _userContext.Endpoint;
+
+        string method;
+        if (string.IsNullOrWhiteSpace(commandLineArgs.Target))
+        {
+            method = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title(AElfCliConstants.ChooseAMethod)
+                    .PageSize(AElfCliConstants.DefaultPageSize)
+                    .MoreChoicesText(AElfCliConstants.MoreMethods)
+                    .AddChoices("Create", "Transfer", "TransferFrom", "Issue", "Approve", "UnApprove", "Burn",
+                        "GetTokenInfo", "GetBalance", "GetAllowance"));
+        }
+        else
+        {
+            method = commandLineArgs.Target?.ToLower();
+        }
+
         try
         {
             _userContext.Endpoint = AElfCliConstants.TestNetMainChainEndpoint;
-            switch (commandLineArgs.Target?.ToLower())
+            switch (method)
             {
-                case "create":
+                case "Create":
+                    var symbol = AnsiConsole.Ask<string>("[blue]Symbol[/]:");
+                    var tokenName = AnsiConsole.Ask<string>("[blue]Token Name[/]:");
+                    var totalSupply = AnsiConsole.Ask<long>("[blue]Total Supply[/]:");
+                    var decimals = AnsiConsole.Ask<int>("[blue]Decimals[/]:");
+                    var issuer = AnsiConsole.Confirm($"Set {_userContext.Account} as the [blue]Issuer?[/]")
+                        ? _userContext.Account
+                        : AnsiConsole.Ask<string>("[blue]Issuer[/]:");
+                    var isBurnable = AnsiConsole.Confirm("[blue]Is Burnable[/]:");
+                    var issuerChainId = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                            .Title("[blue]Issue Chain Id[/]")
+                            .PageSize(AElfCliConstants.DefaultPageSize)
+                            .AddChoices($"AElf: {AElfCliConstants.MainChainId}",
+                                $"tdVV: {AElfCliConstants.SideChainId1}",
+                                $"tdVW: {AElfCliConstants.SideChainId2}"
+                            )
+                            .UseConverter(o => o.Split(':').Last().Trim())
+                    );
+
                     var txId = await _tokenService.CreateAsync(
                         symbol,
                         tokenName.IsNullOrWhiteSpace() ? symbol : tokenName,
-                        totalSupply.IsNullOrWhiteSpace() ? 100000000000000000 : long.Parse(totalSupply),
-                        decimals.IsNullOrWhiteSpace() ? 8 : int.Parse(decimals),
+                        totalSupply,
+                        decimals,
                         issuer.IsNullOrWhiteSpace() ? _userContext.Account : issuer,
-                        isBurnable.IsNullOrWhiteSpace() ? true : bool.Parse(isBurnable),
-                        issuerChainId.IsNullOrWhiteSpace() ? AElfCliConstants.AElfChainId : int.Parse(issuerChainId));
+                        isBurnable,
+                        int.Parse(issuerChainId));
                     await _blockChainService.CheckTransactionResultAsync(txId);
                     break;
                 default:
