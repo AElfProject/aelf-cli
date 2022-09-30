@@ -19,30 +19,30 @@ public sealed class WalletTests : AbpIntegratedTest<AElfWalletTestModule>
         _bip39Service = GetRequiredService<IBip39Service>();
     }
 
-    [Fact(Skip = "")]
-    public void Test1()
-    {
-        const string mnemonicValue = "spawn spirit sure slender table actor ball health subject trade aware pilot";
-        const string expectedPrivateKey = "923eed2ff8a0d246ca4d9387459bb1817c91ffcb4c137118a8ac46f86963009d";
-        const string expectedPubkey =
-            "0486ba629cdc52b2698f7ba3a6cda80efe121b7153054e3980696c57f31d15f07040d9de7665f9e99a24089b648275ed61fce6b75c7c29c1b7b819e3c2a3146b72";
-        const string expectedAddress = "4HcpfWUnzyRx8k6f74ASWj94L92771ogcJ2YszMLW2VSfopdo";
-        var mnemonic = new Mnemonic
-        {
-            Value = mnemonicValue,
-            Language = BipWordlistLanguage.English
-        };
-        var seed = _bip39Service.ConvertMnemonicToSeedHex(mnemonic);
-        var masterWallet = new AElfHDWallet(seed);
-        var account = masterWallet.GetAccount(0);
-        var wallet = account.GetExternalWallet(0);
-        var keyPair = CryptoHelper.FromPrivateKey(wallet.PrivateKey);
-        //keyPair.PublicKey.ToHex().ShouldBe(expectedPubkey);
-        keyPair.PrivateKey.ToHex().ShouldBe(expectedPrivateKey);
-        wallet.PrivateKey.ToHex().ShouldBe(expectedPrivateKey);
-        wallet.Address.ToBase58().ShouldBe(expectedAddress);
-        wallet.KeyPair.PublicKey.ToHex().ShouldBe(expectedPubkey);
-    }
+    // [Fact(Skip = "")]
+    // public void Test1()
+    // {
+    //     const string mnemonicValue = "spawn spirit sure slender table actor ball health subject trade aware pilot";
+    //     const string expectedPrivateKey = "923eed2ff8a0d246ca4d9387459bb1817c91ffcb4c137118a8ac46f86963009d";
+    //     const string expectedPubkey =
+    //         "0486ba629cdc52b2698f7ba3a6cda80efe121b7153054e3980696c57f31d15f07040d9de7665f9e99a24089b648275ed61fce6b75c7c29c1b7b819e3c2a3146b72";
+    //     const string expectedAddress = "4HcpfWUnzyRx8k6f74ASWj94L92771ogcJ2YszMLW2VSfopdo";
+    //     var mnemonic = new Mnemonic
+    //     {
+    //         Value = mnemonicValue,
+    //         Language = BipWordlistLanguage.English
+    //     };
+    //     var seed = _bip39Service.ConvertMnemonicToSeedHex(mnemonic);
+    //     var masterWallet = new AElfHDWallet(seed);
+    //     var account = masterWallet.GetAccount(0);
+    //     var wallet = account.GetExternalWallet(0);
+    //     var keyPair = CryptoHelper.FromPrivateKey(wallet.PrivateKey);
+    //     //keyPair.PublicKey.ToHex().ShouldBe(expectedPubkey);
+    //     keyPair.PrivateKey.ToHex().ShouldBe(expectedPrivateKey);
+    //     wallet.PrivateKey.ToHex().ShouldBe(expectedPrivateKey);
+    //     wallet.Address.ToBase58().ShouldBe(expectedAddress);
+    //     wallet.KeyPair.PublicKey.ToHex().ShouldBe(expectedPubkey);
+    // }
 
     [Fact]
     public void HDWalletTests()
