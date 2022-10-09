@@ -92,7 +92,7 @@ Task("Test-with-Codecov")
     };
     var codecovToken = "$CODECOV_TOKEN";
     var actions = new List<Action>();
-    var testProjects = GetFiles("./test/*.Tests/*.csproj");
+    var testProjects = GetFiles("./test/*.Test/*.csproj");
 
     foreach(var testProject in testProjects)
     {
@@ -177,7 +177,7 @@ Task("Run-Unit-Tests")
             return args.Append("--logger trx");
         }
 };
-    var testProjects = GetFiles("./test/*.Tests/*.csproj");
+    var testProjects = GetFiles("./test/*.Test/*.csproj");
 
 
     foreach(var testProject in testProjects)
@@ -188,7 +188,7 @@ Task("Run-Unit-Tests")
 Task("Upload-Coverage")
     .Does(() =>
 {
-    var reports = GetFiles("./test/*.Tests/TestResults/*/coverage.cobertura.xml");
+    var reports = GetFiles("./test/*.Test/TestResults/*/coverage.cobertura.xml");
 
     foreach(var report in reports)
     {
