@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
 
-namespace AElf.Cli
-{
-    public class AElfCliOptions
-    {
-        public Dictionary<string, Type> Commands { get; }
+namespace AElf.Cli;
 
-        public AElfCliOptions()
-        {
-            Commands = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
-        }
+public class AElfCliOptions
+{
+    public AElfCliOptions()
+    {
+        Commands = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
     }
+
+    public Dictionary<string, Type> Commands { get; }
 }

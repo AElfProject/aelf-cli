@@ -4,143 +4,130 @@ using System.IO;
 using System.Linq;
 using Volo.Abp.DependencyInjection;
 
-namespace AElf.Cli.Services
+namespace AElf.Cli.Services;
+
+public interface IConfigService
 {
-    public interface IConfigService
+    bool Set(string key, string value);
+    string Get(string key);
+    bool Delete(string key);
+    Dictionary<string, string> GetList();
+}
+
+public class ConfigService : IConfigService, ITransientDependency
+{
+    private const string EnvironmentVariablePrefix = "AELF_CLI_";
+
+    public bool Set(string key, string value)
     {
-        bool Set(string key, string value);
-        string Get(string key);
-        bool Delete(string key);
-        Dictionary<string, string> GetList();
+        return AddConfigToFile(key, value);
     }
 
-    public class ConfigService : IConfigService, ITransientDependency
+    public string Get(string key)
     {
-        private const string EnvironmentVariablePrefix = "AELF_CLI_";
+        var configs = GetConfig();
+        configs.TryGetValue(key, out var value);
+        return value;
+    }
 
-        public bool Set(string key, string value)
+    public bool Delete(string key)
+    {
+        return DeleteConfigFromFile(key);
+    }
+
+    public Dictionary<string, string> GetList()
+    {
+        return GetConfig();
+    }
+
+    private string GetConfigPath()
+    {
+        return Path.Combine(AElfCliConstants.DataPath, "aelfcli.conf");
+    }
+
+    private Dictionary<string, string> GetConfig()
+    {
+        var configs = GetConfigFromFile();
+        foreach (var key in new List<string>
+                 {
+                     AElfCliConstants.EndpointConfigKey, AElfCliConstants.AccountConfigKey,
+                     AElfCliConstants.PasswordConfigKey
+                 })
         {
-            return AddConfigToFile(key, value);
+            if (configs.ContainsKey(key)) continue;
+
+            var value = Environment.GetEnvironmentVariable($"{EnvironmentVariablePrefix}{key.ToUpper()}");
+            if (!value.IsNullOrWhiteSpace()) configs[key] = value;
         }
 
-        public string Get(string key)
+        return configs;
+    }
+
+    private Dictionary<string, string> GetConfigFromFile()
+    {
+        var configs = new Dictionary<string, string>();
+        var path = GetConfigPath();
+
+        if (!File.Exists(path))
         {
-            var configs = GetConfig();
-            configs.TryGetValue(key, out var value);
-            return value;
-        }
-
-        public bool Delete(string key)
-        {
-            return DeleteConfigFromFile(key);
-        }
-
-        public Dictionary<string, string> GetList()
-        {
-            return GetConfig();
-        }
-
-        private string GetConfigPath()
-        {
-            return Path.Combine(AElfCliConstants.DataPath, "aelfcli.conf");
-        }
-
-        private Dictionary<string, string> GetConfig()
-        {
-            var configs = GetConfigFromFile();
-            foreach (var key in new List<string>
-                {AElfCliConstants.EndpointConfigKey, AElfCliConstants.AccountConfigKey, AElfCliConstants.PasswordConfigKey})
-            {
-                if (configs.ContainsKey(key))
-                {
-                    continue;
-                }
-
-                var value = Environment.GetEnvironmentVariable($"{EnvironmentVariablePrefix}{key.ToUpper()}");
-                if (!value.IsNullOrWhiteSpace())
-                {
-                    configs[key] = value;
-                }
-            }
-
+            File.Create(path);
             return configs;
         }
 
-        private Dictionary<string, string> GetConfigFromFile()
+        using var sr = new StreamReader(path);
+        string line;
+        while ((line = sr.ReadLine()) != null)
         {
-            var configs = new Dictionary<string, string>();
-            var path = GetConfigPath();
+            line = line.Trim();
+            if (line.IsNullOrWhiteSpace() || line.StartsWith("#")) continue;
 
-            if (!File.Exists(path))
-            {
-                File.Create(path);
-                return configs;
-            }
-
-            using var sr = new StreamReader(path);
-            string line;
-            while ((line = sr.ReadLine()) != null)
-            {
-                line = line.Trim();
-                if (line.IsNullOrWhiteSpace() || line.StartsWith("#"))
-                {
-                    continue;
-                }
-
-                var item = line.Split(" ");
-                configs.Add(item[0], item.Last());
-            }
-
-            return configs;
+            var item = line.Split(" ");
+            configs.Add(item[0], item.Last());
         }
 
-        private bool AddConfigToFile(string key, string value)
-        {
-            var path = GetConfigPath();
-            var newContent = GetConfigContent(path, key);
-            newContent.Add($"{key} {value}");
-            File.WriteAllLines(path, newContent);
+        return configs;
+    }
 
-            return true;
-        }
+    private bool AddConfigToFile(string key, string value)
+    {
+        var path = GetConfigPath();
+        var newContent = GetConfigContent(path, key);
+        newContent.Add($"{key} {value}");
+        File.WriteAllLines(path, newContent);
 
-        private bool DeleteConfigFromFile(string key)
+        return true;
+    }
+
+    private bool DeleteConfigFromFile(string key)
+    {
+        var config = GetConfigFromFile();
+        if (!config.ContainsKey(key)) return false;
+
+        var path = GetConfigPath();
+        var newContent = GetConfigContent(path, key);
+        File.WriteAllLines(path, newContent);
+
+        return true;
+    }
+
+    private List<string> GetConfigContent(string path, string ignoreKey)
+    {
+        using var sr = new StreamReader(path);
+        string line;
+        var newContent = new List<string>();
+        while ((line = sr.ReadLine()) != null)
         {
-            var config = GetConfigFromFile();
-            if (!config.ContainsKey(key))
+            var lineTrim = line.Trim();
+            if (lineTrim.IsNullOrWhiteSpace() || lineTrim.StartsWith("#"))
             {
-                return false;
+                newContent.Add(line);
+                continue;
             }
 
-            var path = GetConfigPath();
-            var newContent = GetConfigContent(path, key);
-            File.WriteAllLines(path, newContent);
-
-            return true;
+            var item = lineTrim.Split(" ");
+            if (item[0] != ignoreKey) newContent.Add(line);
         }
 
-        private List<string> GetConfigContent(string path, string ignoreKey)
-        {
-            using var sr = new StreamReader(path);
-            string line;
-            var newContent = new List<string>();
-            while ((line = sr.ReadLine()) != null)
-            {
-                var lineTrim = line.Trim();
-                if (lineTrim.IsNullOrWhiteSpace() || lineTrim.StartsWith("#"))
-                {
-                    newContent.Add(line);
-                    continue;
-                }
-
-                var item = lineTrim.Split(" ");
-                if (item[0] != ignoreKey)
-                {
-                    newContent.Add(line);
-                }
-            }
-
-            return newContent;
-        }
+        return newContent;
     }
 }

@@ -1,5 +1,15 @@
 # AElf.Cli
 
+BRANCH | AZURE PIPELINES                                                                                                                                                                                                     | TESTS                                                                                                                                                                                  | CODE COVERAGE
+-------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------
+MASTER   | [![Build Status](https://dev.azure.com/AElfProject/aelf-cli/_apis/build/status/AElfProject.aelf-cli?branchName=master)](https://dev.azure.com/AElfProject/aelf-cli/_build/latest?definitionId=24&branchName=master) | [![Test Status](https://img.shields.io/azure-devops/tests/AElfProject/aelf-cli/24/master)](https://dev.azure.com/AElfProject/aelf-cli/_build/latest?definitionId=24&branchName=master) | [![codecov](https://codecov.io/gh/AElfProject/aelf-cli/branch/master/graph/badge.svg?token=TqF7wG35aW)](https://codecov.io/gh/AElfProject/aelf-cli)
+DEV    | [![Build Status](https://dev.azure.com/AElfProject/aelf-cli/_apis/build/status/AElfProject.aelf-cli?branchName=dev)](https://dev.azure.com/AElfProject/aelf-cli/_build/latest?definitionId=24&branchName=dev)       | [![Test Status](https://img.shields.io/azure-devops/tests/AElfProject/aelf-cli/24/dev)](https://dev.azure.com/AElfProject/aelf-cli/_build/latest?definitionId=24&branchName=dev)       | [![codecov](https://codecov.io/gh/AElfProject/aelf-cli/branch/dev/graph/badge.svg?token=TqF7wG35aW)](https://codecov.io/gh/AElfProject/aelf-cli)
+
+This tool is still working in process, please add this myget source if you occur problems with finding packages:
+```
+https://www.myget.org/F/aelf-project-dev/api/v3/index.json
+```
+
 ## How to install aelf command in local
 
 1. `cd` to the dir `src/AElf.Cli`, run `dotnet pack`

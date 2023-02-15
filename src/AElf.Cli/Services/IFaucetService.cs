@@ -3,32 +3,31 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Volo.Abp.DependencyInjection;
 
-namespace AElf.Cli.Services
+namespace AElf.Cli.Services;
+
+public interface IFaucetService
 {
-    public interface IFaucetService
+    Task<string> TakeAsync(string symbol, long amount);
+}
+
+public class FaucetService : IFaucetService, ITransientDependency
+{
+    private readonly IBlockChainService _blockChainService;
+
+    public FaucetService(IBlockChainService blockChainService)
     {
-        Task<string> TakeAsync(string symbol, long amount);
+        _blockChainService = blockChainService;
     }
 
-    public class FaucetService : IFaucetService, ITransientDependency
+    public async Task<string> TakeAsync(string symbol, long amount)
     {
-        private readonly IBlockChainService _blockChainService;
-
-        public FaucetService(IBlockChainService blockChainService)
+        var @params = new JObject
         {
-            _blockChainService = blockChainService;
-        }
+            ["symbol"] = symbol,
+            ["amount"] = amount
+        };
 
-        public async Task<string> TakeAsync(string symbol, long amount)
-        {
-            var @params = new JObject
-            {
-                ["symbol"] = symbol,
-                ["amount"] = amount
-            };
-
-            return await _blockChainService.SendTransactionAsync(AElfCliConstants.FaucetContractAddress, "Take",
-                JsonConvert.SerializeObject(@params));
-        }
+        return await _blockChainService.SendTransactionAsync(AElfCliConstants.FaucetContractAddress, "Take",
+            JsonConvert.SerializeObject(@params));
     }
 }

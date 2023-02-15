@@ -1,14 +1,13 @@
 using System.Threading.Tasks;
 using AElf.Cli.Args;
 
-namespace AElf.Cli.Commands
+namespace AElf.Cli.Commands;
+
+public interface IAElfCommand
 {
-    public interface IAElfCommand
-    {
-        Task ExecuteAsync(CommandLineArgs commandLineArgs);
+    Task ExecuteAsync(CommandLineArgs commandLineArgs);
 
-        string GetUsageInfo();
+    string GetUsageInfo();
 
-        string GetShortDescription();
-    }
+    string GetShortDescription();
 }

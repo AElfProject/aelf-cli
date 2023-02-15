@@ -1,68 +1,60 @@
 using Volo.Abp.DependencyInjection;
 
-namespace AElf.Cli.Services
+namespace AElf.Cli.Services;
+
+public interface IUserContext
 {
-    public interface IUserContext
+    string Endpoint { get; set; }
+    string Account { get; set; }
+    string Password { get; set; }
+}
+
+public class UserUserContext : IUserContext, ISingletonDependency
+{
+    private readonly IConfigService _configService;
+    private string _account;
+
+    private string _endpoint;
+    private string _password;
+
+    public UserUserContext(IConfigService configService)
     {
-        string Endpoint { get; set; }
-        string Account { get; set; }
-        string Password { get; set; }
+        _configService = configService;
     }
 
-    public class UserUserContext : IUserContext, ISingletonDependency
+
+    public string Endpoint
     {
-        private readonly IConfigService _configService;
-
-        private string _endpoint;
-        private string _account;
-        private string _password;
-
-        public UserUserContext(IConfigService configService)
+        get
         {
-            _configService = configService;
+            if (string.IsNullOrWhiteSpace(_endpoint))
+                _endpoint = _configService.Get(AElfCliConstants.EndpointConfigKey);
+
+            return _endpoint;
         }
+        set => _endpoint = value;
+    }
 
-
-        public string Endpoint
+    public string Account
+    {
+        get
         {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(_endpoint))
-                {
-                    _endpoint = _configService.Get(AElfCliConstants.EndpointConfigKey);
-                }
+            if (string.IsNullOrWhiteSpace(_account)) _account = _configService.Get(AElfCliConstants.AccountConfigKey);
 
-                return _endpoint;
-            }
-            set => _endpoint = value;
+            return _account;
         }
+        set => _account = value;
+    }
 
-        public string Account
+    public string Password
+    {
+        get
         {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(_account))
-                {
-                    _account = _configService.Get(AElfCliConstants.AccountConfigKey);
-                }
+            if (string.IsNullOrWhiteSpace(_password))
+                _password = _configService.Get(AElfCliConstants.PasswordConfigKey);
 
-                return _account;
-            }
-            set => _account = value;
+            return _password;
         }
-
-        public string Password
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(_password))
-                {
-                    _password = _configService.Get(AElfCliConstants.PasswordConfigKey);
-                }
-
-                return _password;
-            }
-            set => _password = value;
-        }
+        set => _password = value;
     }
 }

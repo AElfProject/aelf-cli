@@ -1,7 +1,6 @@
-namespace AElf.BIP39
+namespace AElf.BIP39;
+
+public interface IBipWordlistProvider
 {
-    public interface IBipWordlistProvider
-    {
-        string[] LoadWordlist(BipWordlistLanguage language);
-    }
+    string[] LoadWordlist(BipWordlistLanguage language);
 }

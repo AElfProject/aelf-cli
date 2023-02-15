@@ -1,26 +1,25 @@
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using Volo.Abp.DependencyInjection;
 
-namespace AElf.Cli.Services
+namespace AElf.Cli.Services;
+
+public interface ITopOfOasisService
 {
-    public interface ITopOfOasisService
+    Task<string> UploadProjectAsync();
+}
+
+public class TopOfOasisService : ITopOfOasisService, ITransientDependency
+{
+    private readonly IBlockChainService _blockChainService;
+
+    public TopOfOasisService(IBlockChainService blockChainService)
     {
-        Task<string> UploadProjectAsync(); 
+        _blockChainService = blockChainService;
     }
 
-    public class TopOfOasisService : ITopOfOasisService, ITransientDependency
+    public async Task<string> UploadProjectAsync()
     {
-        private readonly IBlockChainService _blockChainService;
-
-        public TopOfOasisService(IBlockChainService blockChainService)
-        {
-            _blockChainService = blockChainService;
-        }
-        
-        public async Task<string> UploadProjectAsync()
-        {
-            return await _blockChainService.SendTransactionAsync(AElfCliConstants.TopOfOasisContractAddress, "UploadProject");
-        }
+        return await _blockChainService.SendTransactionAsync(AElfCliConstants.TopOfOasisContractAddress,
+            "UploadProject");
     }
 }

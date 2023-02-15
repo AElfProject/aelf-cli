@@ -1,27 +1,22 @@
-using System;
-using System.Text;
+namespace AElf.BIP39.Types;
 
-namespace AElf.BIP39.Types
+public class Mnemonic
 {
-    public class Mnemonic
+    public Mnemonic()
     {
-        public string Value { get; set; }
-        public BipWordlistLanguage Language { get; set; }
+    }
 
-        public Mnemonic()
-        {
+    public Mnemonic(string value, BipWordlistLanguage language = BipWordlistLanguage.English)
+    {
+        Value = value;
+        Language = language;
+    }
 
-        }
+    public string Value { get; set; }
+    public BipWordlistLanguage Language { get; set; }
 
-        public Mnemonic(string value, BipWordlistLanguage language = BipWordlistLanguage.English)
-        {
-            Value = value;
-            Language = language;
-        }
-
-        public override string ToString()
-        {
-            return Value;
-        }
+    public override string ToString()
+    {
+        return Value;
     }
 }
