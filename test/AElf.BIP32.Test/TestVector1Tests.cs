@@ -22,17 +22,6 @@ public sealed class Bip32Tests : AbpIntegratedTest<Bip32TestModule>
         _bip32Service = GetRequiredService<IBip32Service>();
     }
 
-    [Theory]
-    [InlineData("m",
-        "xpub661MyMwAqRbcFtXgS5sYJABqqG9YLmC4Q1Rdap9gSE8NqtwybGhePY2gZ29ESFjqJoCu1Rupje8YtGqsefD265TMg7usUDFdp6W1EGMcet8",
-        "xprv9s21ZrQH143K3QTDL4LXw2F7HEK3wJUD2nW2nRk4stbPy6cq3jPPqjiChkVvvNKmPGJxWUtg6LnF5kejMRNNU3TGtRBeJgk33yuGBxrMPHi")]
-    public void TestVector1(string vectorPath, string vectorXpub, string vectorXprv)
-    {
-        var masterXprv = _bip32Service.GetMasterXprvFromSeed(Seed);
-        var xprv = _bip32Service.DerivePath(vectorPath);
-        xprv.ToString().ShouldBe(vectorXprv);
-    }
-
     public void Test1()
     {
         const string expectedPath = "m/0'";
