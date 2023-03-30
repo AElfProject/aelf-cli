@@ -5,52 +5,53 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Remove="Wordlists\chinese_simplified.txt"/>
+        <None Remove="Wordlists\chinese_simplified.txt" />
         <Content Include="Wordlists\chinese_simplified.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Remove="Wordlists\chinese_traditional.txt"/>
+        <None Remove="Wordlists\chinese_traditional.txt" />
         <Content Include="Wordlists\chinese_traditional.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Remove="Wordlists\czech.txt"/>
+        <None Remove="Wordlists\czech.txt" />
         <Content Include="Wordlists\czech.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Remove="Wordlists\english.txt"/>
+        <None Remove="Wordlists\english.txt" />
         <Content Include="Wordlists\english.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Remove="Wordlists\french.txt"/>
+        <None Remove="Wordlists\french.txt" />
         <Content Include="Wordlists\french.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Remove="Wordlists\italian.txt"/>
+        <None Remove="Wordlists\italian.txt" />
         <Content Include="Wordlists\italian.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Remove="Wordlists\japanese.txt"/>
+        <None Remove="Wordlists\japanese.txt" />
         <Content Include="Wordlists\japanese.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Remove="Wordlists\korean.txt"/>
+        <None Remove="Wordlists\korean.txt" />
         <Content Include="Wordlists\korean.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Remove="Wordlists\portuguese.txt"/>
+        <None Remove="Wordlists\portuguese.txt" />
         <Content Include="Wordlists\portuguese.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Remove="Wordlists\spanish.txt"/>
+        <None Remove="Wordlists\spanish.txt" />
         <Content Include="Wordlists\spanish.txt">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Savage.Passwords.Rfc2898PasswordDeriveBytes" Version="1.2.0.1"/>
-        <PackageReference Include="Volo.Abp.Autofac" Version="5.2.2"/>
-        <PackageReference Include="Volo.Abp.Core" Version="5.2.2"/>
+        <PackageReference Include="NBitcoin" Version="7.0.25" />
+        <PackageReference Include="Savage.Passwords.Rfc2898PasswordDeriveBytes" Version="1.2.0.1" />
+        <PackageReference Include="Volo.Abp.Autofac" Version="5.2.2" />
+        <PackageReference Include="Volo.Abp.Core" Version="5.2.2" />
     </ItemGroup>
 
 </Project>

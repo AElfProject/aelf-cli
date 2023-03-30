@@ -6,11 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.Core" Version="1.2.3"/>
-        <PackageReference Include="Volo.Abp.TestBase" Version="5.2.2"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3"/>
-        <PackageReference Include="Shouldly" Version="3.0.2"/>
-        <PackageReference Include="xunit" Version="2.4.1"/>
+        <PackageReference Include="AElf.Core" Version="1.2.3" />
+        <PackageReference Include="NBitcoin" Version="7.0.25" />
+        <PackageReference Include="Volo.Abp.TestBase" Version="5.2.2" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+        <PackageReference Include="Shouldly" Version="3.0.2" />
+        <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
@@ -22,11 +23,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\AElf.BIP39\AElf.BIP39.csproj"/>
+        <ProjectReference Include="..\..\src\AElf.BIP39\AElf.BIP39.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="vectors.json"/>
+        <None Remove="vectors.json" />
         <Content Include="vectors.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

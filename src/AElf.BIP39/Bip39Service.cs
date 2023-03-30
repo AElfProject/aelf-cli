@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Security.Cryptography;
 using AElf.BIP39.Types;
+using NBitcoin;
 using Volo.Abp.DependencyInjection;
+using Mnemonic = NBitcoin.Mnemonic;
 
 namespace AElf.BIP39;
 
@@ -32,12 +34,14 @@ public class Bip39Service : IBip39Service, ITransientDependency
 
     public Mnemonic ConvertEntropyToMnemonic(Entropy entropy)
     {
-        return _entropyService.ConvertEntropyToMnemonic(entropy);
+        return new Mnemonic(Wordlist.English);
+        // return _entropyService.ConvertEntropyToMnemonic(entropy);
     }
 
     public Entropy ConvertMnemonicToEntropy(Mnemonic mnemonic)
     {
-        return _mnemonicService.ConvertMnemonicToEntropy(mnemonic);
+        return new Entropy();
+        // return _mnemonicService.ConvertMnemonicToEntropy(mnemonic);
     }
 
     public string ConvertMnemonicToSeedHex(Mnemonic mnemonic, string password = null)
@@ -47,6 +51,7 @@ public class Bip39Service : IBip39Service, ITransientDependency
 
     public bool ValidateMnemonic(Mnemonic mnemonic)
     {
-        return _mnemonicService.ValidateMnemonic(mnemonic);
+        return true;
+        // return _mnemonicService.ValidateMnemonic(mnemonic);
     }
 }

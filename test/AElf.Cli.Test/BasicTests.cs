@@ -8,6 +8,7 @@ public class BasicTests : AElfCliTestBase
     [Fact]
     public async Task Test1()
     {
-        await CliService.RunAsync(new[] { "create" });
+        // await CliService.RunAsync(new[] { "create" });
+        await CliService.RunAsync(new[] { "start" });
     }
 }

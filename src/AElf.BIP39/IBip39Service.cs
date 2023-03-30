@@ -1,4 +1,6 @@
+
 using AElf.BIP39.Types;
+using Mnemonic = NBitcoin.Mnemonic;
 
 namespace AElf.BIP39;
 
