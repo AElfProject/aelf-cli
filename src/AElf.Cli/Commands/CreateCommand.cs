@@ -12,15 +12,6 @@ namespace AElf.Cli.Commands;
 public class CreateCommand : IAElfCommand, ITransientDependency
 {
     public const string Name = "create";
-    private readonly IBip39Service _bip39Service;
-    private readonly IMnemonicService _mnemonicService;
-
-    public CreateCommand(IBip39Service bip39Service, IMnemonicService mnemonicService)
-    {
-        _bip39Service = bip39Service;
-        _mnemonicService = mnemonicService;
-    }
-
     public ILogger<CreateCommand> Logger { get; set; }
     
     public const string DEFAULT_PATH = "m/44'/1616'/0'/0/x";
@@ -37,16 +28,6 @@ public class CreateCommand : IAElfCommand, ITransientDependency
         Logger.LogInformation("privateKey is : {privateKey}",privateKey);
         Logger.LogInformation("publicKey is : {publicKey}",publicKey);
 
-        /*var mnemonic = new Mnemonic(Wordlist.English, WordCount.Twelve);
-        var seed = mnemonic.DeriveSeed();
-        var path = KeyPath.Parse("m/44'/1616'/0'/0/0");
-        var extKey = ExtKey.CreateFromSeed(seed);
-        var derived = extKey.Derive(path);
-        var privateKey = derived.PrivateKey;
-        var seedHex = _mnemonicService.ConvertMnemonicToSeedHex(mnemonic, "");*/
-
-        //var mnemonic = _bip39Service.GenerateMnemonic(256, BipWordlistLanguage.English);
-        //Logger.LogInformation(GetAccountInfo(mnemonic, ""));
     }
 
     public string GetUsageInfo()
@@ -59,11 +40,5 @@ public class CreateCommand : IAElfCommand, ITransientDependency
         return string.Empty;
     }
 
-    // private string GetAccountInfo(Mnemonic mnemonic, string password)
-    // {
-    //     var accountInfo = new StringBuilder();
-    //     accountInfo.AppendLine($"[Mnemonic]{mnemonic}");
-    //     var seedHex = _mnemonicService.ConvertMnemonicToSeedHex(mnemonic, password);
-    //     return accountInfo.ToString();
-    // }
+
 }
